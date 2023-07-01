@@ -24,12 +24,14 @@ flask의 요청의 응답으로 받은 스프링의 처리 결과를 redirect UR
   6. 스프링에선 요청 파라미터 받아서 결과물 출력
 
 해결하면서 걸림돌
-  1. test 에서 할 땐 flask에서 받은 json을 이용해서 요청 URL을 만들 때 result를 JSON.parse()를 이용해야 했는데 실제 main에서 할 땐 이용하면 아래 오류가 발생
+  - flask의 requests.post()는 Response()객체를 응답으로 받음
+
+  - test 에서 할 땐 flask에서 받은 json을 이용해서 요청 URL을 만들 때 result를 JSON.parse()를 이용해야 했는데 실제 main에서 할 땐 이용하면 아래 오류가 발생
 오류 : Uncaught (in promise) SyntaxError: "[object Object]" is not valid JSON at JSON.parse (<anonymous>)
 
 : 위 오류의 의미는 JSON.parse()의 파라미터로 object 자료형이 들어갈 수 없다는 것을 의미함 JSON.parse()는 string을 Object로 바꿔주는 메소드로 string만 받을 수 있음
 
-  1-2. 그렇다면 flask로부터 응답을 받을 때 string으로 받는 경우와 json으로 받는 경우가 나뉘는 이유는? 
+  - 그렇다면 flask로부터 응답을 받을 때 string으로 받는 경우와 json으로 받는 경우가 나뉘는 이유는? 
 : flask에서 requests.post() 의 응답 Response() 객체를 이용해서 json을 만들 때 사용하는 속성에 따라 달라짐
 response.text : 받은 응답의 body 내용을 string으로 반환 - js가 받을 때 string으로 받음
 response.json() : 받은 응답의 body 내용을 json으로 반환 - js가 받을 때 object로 받음
@@ -38,13 +40,44 @@ flask에서 json으로 반환하면 JSON.parse() 없이 바로 Object.entries()�
 text로 반환하면 JSON.parse()를 통해 Object로 바꾼 후 Object.entries()를 적용해야 함
 
 
-  2. flask로부터 받은 json에 result에 해당하는 key가 없음에도 아래 방식으로 정상적으로 작동됨..
+  - flask로부터 받은 json에 result에 해당하는 key가 없음에도 아래 방식으로 정상적으로 작동됨..
 const result = JSON.parse(json_data.result)
 : 그냥 착각이었다 실험해보니까 모든 경우에서 undefined 로 나옴
 
-  3. @RequestParam 으로 여러개 요청 파라미터 한꺼번에 받는 방법
+  - @RequestParam 으로 여러개 요청 파라미터 한꺼번에 받는 방법
 @RequestParam Map<String, Object> params
 이후 ObjectMapper의 .converValue()를 이용해서 DTO로 변환할 수 있음
+
+
+   - then(resp => {}) 에서 resp가 뭐임
+fetch()의 응답은 응답에 대한 정보를 가지고 있는 Promise 객체임 then()에 들어가는 파라미터는 그 객체를 가리킴
+
+  - then()에 return이 상황마다 있거나 없는 이유
+중괄호({..}) 유무에 따라 달라짐
+then(resp => resp.json()) - 자동으로 return 함
+then(resp => {return resp.json()) - return 이 안되기 때문에 return을 직접 해줘야 함
+
+
+  - Promise 객체를 다루는 방법이 어떻게 되나
+첫번째 then()에선 response.json() 을 return 
+두번째 then()에서 return 된 json을 이용해서 이후 처리
+
+  - 그리하는 이유
+fetch 에서 첫번째 .then()의 Promise 객체는 pending 상태임 그래서 직접적인 처리는 두번째 then()을 이용해야 함 fullfilled 상태의 응답을 이용해야 함
+사실 첫번째 then이 return 하는 값도 Promise 객체임 접근할 수 있는 방법이 생기는 것임
+
+  - response.json() 이후 json에 접근하는 방법
+then(data => { result = data.result_key }
+: 위처럼 json 에 접근해서 값을 변수에 저장할 수 있음
+result_key 는 응답 body에 있는 json의 key임
+
+
+  - fetch() 방식과 html 태그(button, form) 방식의 요청 전달 차이
+fetch() 방식 : fetch(url, {header=...}).then(resp => {location.href = "/auth/register"})
+html 태그(button, form) 방식 : 두 가지 방법이 존재함
+1. button type = button th:onclick="|location.href='@{/auth/register}'|"
+2. button type = submit / form method='post' th:action="@{/auth/register}" button이 form 태그 안에 있어야 함
+타임리프 안쓰면 @{} 이런거 빠지고 url 만 문자열로 넘김
 
 
 todo
