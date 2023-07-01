@@ -1,17 +1,18 @@
 package tomato.classifier.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tomato.classifier.data.ResultData;
-import tomato.classifier.dto.DiseaseDto;
+import org.springframework.web.bind.annotation.*;
+import tomato.classifier.dto.main.ResultDto;
+import tomato.classifier.dto.main.DiseaseDto;
 import tomato.classifier.service.MainService;
+
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -27,19 +28,21 @@ public class MainController {
     }
 
     @PostMapping("/predict")
-    public String resultView(@RequestBody ResultData data){
+    @ResponseBody
+    public ResponseEntity<DiseaseDto> resultView(@RequestBody ResultDto result){
 
-        mainService.save(data);
+        DiseaseDto diseaseDto = mainService.getDiseaseInfo(result);
 
-        return "redirect:/main/result";
+        return ResponseEntity.status(HttpStatus.OK).body(diseaseDto);
     }
 
     @GetMapping("/result")
-    public String resultView(Model model){
+    public String resultView(@RequestParam Map<String, Object> params, Model model){
 
-        DiseaseDto result = mainService.result();
+        ObjectMapper mapper = new ObjectMapper();
+        DiseaseDto diseaseDto = mapper.convertValue(params, DiseaseDto.class);
 
-        model.addAttribute("dto", result);
+        model.addAttribute("result", diseaseDto);
 
         return "main/resultPage";
     }

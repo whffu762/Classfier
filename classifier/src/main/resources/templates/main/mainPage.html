@@ -78,17 +78,15 @@
 
 
     submitButton.addEventListener('click', function() {
-        const fLength = uploadFiles.files.length
+        const file_Length = uploadFiles.files.length
 
-
-        if(fLength != 5) {
+        if(file_Length != 5) {
             alert("이미지는 5장을 선택해야 합니다.")
         } else {
             $("#div_load_image").show();
             for (let i = 0; i < 5; i++) {
                 formData.append("files", uploadFiles.files[i]);
             }
-
             fetch(url, {
                 method: "POST",
                 body: formData,
@@ -96,9 +94,12 @@
             }).then(response => {
                 return response.json()
             }).then(json => {
-                const url = json.result_url
-                console.log(url)
-                window.location.href = "/main/result"
+                const result_url = json.result_url
+                const result = json.diseaseInfo
+                const params = Object.entries(result).map(e =>e.join('=')).join('&')
+                const url = result_url+"?"+params
+
+                window.location.href = url
             })
         }
 

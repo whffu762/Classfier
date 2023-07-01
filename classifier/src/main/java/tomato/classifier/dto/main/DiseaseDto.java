@@ -1,7 +1,6 @@
-package tomato.classifier.dto;
+package tomato.classifier.dto.main;
 
 import lombok.*;
-import tomato.classifier.data.ResultData;
 import tomato.classifier.entity.Disease;
 
 @Data
@@ -19,13 +18,13 @@ public class DiseaseDto {
 
     private Integer prob;
 
-    public static DiseaseDto convertDto(Disease target, ResultData data){
+    public static DiseaseDto convertDto(Disease target, ResultDto result){
         return new DiseaseDto(
                 target.getId(),
                 target.getDName(),
                 target.getSrc(),
                 target.getSolution(),
-                data.getProb()
+                result.getProb()
         );
     }
 }
