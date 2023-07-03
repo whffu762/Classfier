@@ -8,7 +8,7 @@ from flask_cors import CORS
 #플라스크 객체 생성
 #__name__에 객체 변수명(app)이 저장됨
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}})
 
 
 #Flask가 필요한 데이터를 모아둔 디렉토리
