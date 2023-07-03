@@ -53,7 +53,11 @@
                 </div>
                 <div class="image-upload">
                     <form id="submitForm" enctype="multipart/form-data">
+<<<<<<< HEAD
                         <label for="files" class="form-label">이미지 입력</label>
+=======
+                        <label for="files" class="form-label">Multiple files input</label>
+>>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
                         <input class="form-control" type="file" id="files" multiple>
                         <button id="file-send" class="btn btn-light" type="button">전송</button>
                     </form>
@@ -73,15 +77,25 @@
     const submitButton = document.querySelector("#file-send")
     const uploadFiles  = document.querySelector("#files")
     const formData = new FormData();
+<<<<<<< HEAD
     const url = "/main/input"
+=======
+    const url = "http://127.0.0.1:5000/input"
+
+
+>>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
 
     submitButton.addEventListener('click', function() {
         const file_Length = uploadFiles.files.length
 
         if(file_Length != 5) {
             alert("이미지는 5장을 선택해야 합니다.")
+<<<<<<< HEAD
         }
         else {
+=======
+        } else {
+>>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
             $("#div_load_image").show();
             for (let i = 0; i < 5; i++) {
                 formData.append("files", uploadFiles.files[i]);
@@ -91,10 +105,24 @@
                 body: formData,
                 redirect: "follow"
             }).then(response => {
+<<<<<<< HEAD
                 console.log(response)
                 location.href = response.url
             })
         }
+=======
+                return response.json()
+            }).then(json => {
+                const result_url = json.result_url
+                const result = json.diseaseInfo
+                const params = Object.entries(result).map(e =>e.join('=')).join('&')
+                const url = result_url+"?"+params
+
+                window.location.href = url
+            })
+        }
+
+>>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
     })
 
 </script>
