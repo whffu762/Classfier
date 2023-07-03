@@ -10,7 +10,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 #CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}}) client와 통신 안해서 이거 필요없음
 
-
 #Flask가 필요한 데이터를 모아둔 디렉토리
 root = os.path.join("c:", os.sep, "Users", "whffu", "VScode", "forTest")
 
@@ -27,8 +26,9 @@ targetPath = os.path.join(root, temp_dir[4], "Target")
 input_num = 5
 
 
+#추후 추가
+#import pymysql
 
-import pymysql
 
 #DB 연결
 def Dbconnect():
