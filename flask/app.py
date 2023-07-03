@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from flask import Flask
 import os
 #from flask_cors import CORS
@@ -249,3 +250,5 @@ class CustomImageDataset(Dataset):
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
 
+=======
+>>>>>>> 885135a344fc0d277d6ec7bc6d2eadf9b798a928
