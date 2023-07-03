@@ -8,5 +8,5 @@ import lombok.Setter;
 public class ResultDto {
 
     private String name;
-    private String prob;
+    private Integer prob;
 }

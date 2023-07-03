@@ -10,12 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tomato.classifier.dto.main.DiseaseDto;
+import tomato.classifier.dto.main.ResultDto;
 import tomato.classifier.service.MainService;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
+
 
 @Controller
 @Slf4j
@@ -32,20 +32,11 @@ public class MainController {
     }
 
     @PostMapping("/input")
-    public ResponseEntity<?> inputImg(List<MultipartFile> files) throws IOException {
+    public String inputImg(@RequestParam("imgFiles") List<MultipartFile> files, Model model) throws IOException {
 
         mainService.saveImg(files);
-        String result_url = mainService.predict();
-        HttpHeaders headers = new HttpHeaders();    //이런 걸 bean 으로 등록해야 하나..?
-        headers.setLocation(URI.create(result_url));
-
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-    }
-
-    @GetMapping("/result")
-    public String resultView(@RequestParam Map<String, Object> result, Model model){
-
-        DiseaseDto diseaseDto = mainService.getDiseaseInfo(result);
+        ResultDto resultDto = mainService.predict();
+        DiseaseDto diseaseDto = mainService.getDiseaseInfo(resultDto);
         model.addAttribute("result", diseaseDto);
 
         return "main/resultPage";
