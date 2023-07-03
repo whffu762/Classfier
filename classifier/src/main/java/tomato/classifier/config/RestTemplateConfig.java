@@ -11,6 +11,7 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
         //관련 설정은 추후 추가
+        //이거 추가 될까?
 
         return restTemplateBuilder.build();
     }
