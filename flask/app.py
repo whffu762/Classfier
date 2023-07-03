@@ -1,6 +1,6 @@
 from flask import Flask
 import os
-from flask_cors import CORS
+#from flask_cors import CORS
 
 #db에 질병 설명 저장할 때 학습시킨 순서대로 번호 매겨서 저장해야함 글자가 지멋대로 돼 있는듯
 #학습시킨 순서대로 정렬이 돼 있어야 함
