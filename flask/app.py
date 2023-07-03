@@ -8,11 +8,7 @@ from flask_cors import CORS
 #플라스크 객체 생성
 #__name__에 객체 변수명(app)이 저장됨
 app = Flask(__name__)
-<<<<<<< HEAD
 #CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}}) client와 통신 안해서 이거 필요없음
-=======
-CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}})
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
 
 
 #Flask가 필요한 데이터를 모아둔 디렉토리
@@ -73,7 +69,6 @@ def Select_id(TABLE, ID_CODE):
 
 
 
-<<<<<<< HEAD
 #이미지 저장
 @app.route("/predict", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
 def predict():
@@ -81,37 +76,6 @@ def predict():
     clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
     
     return  response
-=======
-
-from flask import request, redirect, url_for, Response
-import requests
-
-#이미지 저장
-@app.route("/input", methods=['GET', 'POST'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
-def input_img():
-    if request.method == 'POST':
-        save_img()
-    
-    data = mainPredict()
-    headers = {"Content-Type": "application/json; charset=utf-8"}
-    diseaseInfo = requests.post("http://localhost:8080/main/predict", data, headers= headers)
-    
-    json_resp= {}
-    json_resp['result_url'] = "/main/result"
-    json_resp['diseaseInfo'] = diseaseInfo.json()   #.text로 받으면 js에서 JSON.parse()를 통해 object로 바꿔야 함
-    
-    return json.dumps(json_resp)
-    
-def save_img():
-    #imgList는 http 요청 body에 들어있는 이미지 데이터를 리스트로 변환한 변수
-    imgList = request.files.getlist("files") #getlist("key") 의 key는 http body의 key값
-
-    for img in imgList:
-        #savePath는 서버 디렉토리에 이미지가 저장될 경로
-        savePath = os.path.join(targetPath, img.filename)   #각 파일에 순차적으로 접근하면서 저장
-        img.save(savePath)
-
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
 
 
 import torch
@@ -150,11 +114,6 @@ def mainPredict():
 
     json_object = predictDensenet(test_loader, b_size)
     
-<<<<<<< HEAD
-=======
-    clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
-    
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
     return json_object 
 
 
