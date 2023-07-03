@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from flask import Flask
 import os
 from flask_cors import CORS
@@ -77,6 +78,12 @@ def predict():
     
     return  response
 
+#폴더 내 파일 삭제 - 한 번 predict한 후 input 이미지가 지워줘야 함
+def clearFolder(Path) :
+    if os.path.exists(Path):
+        for file in os.scandir(Path):
+            os.remove(file.path)
+
 
 import torch
 import torch.nn as nn
@@ -87,14 +94,6 @@ from collections import Counter
 from torch.utils.data import Dataset
 import json
 from PIL import Image
-
-
-#폴더 내 파일 삭제 - 한 번 predict한 후 input 이미지가 지워줘야 함
-def clearFolder(Path) :
-    if os.path.exists(Path):
-        for file in os.scandir(Path):
-            os.remove(file.path)
-
 
 #데이터 전처리
 #@app.route("/predict", methods=['POST'])  
