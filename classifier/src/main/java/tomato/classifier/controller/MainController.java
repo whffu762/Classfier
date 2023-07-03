@@ -34,13 +34,8 @@ public class MainController {
     @PostMapping("/input")
     public ResponseEntity<?> inputImg(List<MultipartFile> files) throws IOException {
 
-        log.info("aaaa");
         mainService.saveImg(files);
-
-        log.info("aaaa");
         String result_url = mainService.predict();
-
-        log.info("aaaa");
         HttpHeaders headers = new HttpHeaders();    //이런 걸 bean 으로 등록해야 하나..?
         headers.setLocation(URI.create(result_url));
 
@@ -51,7 +46,6 @@ public class MainController {
     public String resultView(@RequestParam Map<String, Object> result, Model model){
 
         DiseaseDto diseaseDto = mainService.getDiseaseInfo(result);
-
         model.addAttribute("result", diseaseDto);
 
         return "main/resultPage";

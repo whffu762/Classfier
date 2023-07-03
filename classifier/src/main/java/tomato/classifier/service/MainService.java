@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import tomato.classifier.dto.main.DiseaseDto;
+import tomato.classifier.dto.main.ResultDto;
 import tomato.classifier.entity.Disease;
 import tomato.classifier.repository.main.DiseaseRepository;
-import tomato.classifier.test.testDto;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +48,8 @@ public class MainService {
         //간단하게 쓸 수 있는 restTemplate
 
         String response = restTemplate.getForObject(url, String.class);
-        testDto testDto = objectMapper.readValue(response, testDto.class);
-        String params = "?name="+ testDto.getName()+"&prob="+testDto.getProb();
+        ResultDto resultDto = objectMapper.readValue(response, ResultDto.class);
+        String params = "?name="+ resultDto.getName()+"&prob="+resultDto.getProb();
 
         return "/main/result"+params;
     }
@@ -63,8 +63,8 @@ public class MainService {
         HttpEntity<String> entity = new HttpEntity<>("",headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        testDto testDto = objectMapper.readValue(response.getBody(), testDto.class);
-        String params = "?name="+ testDto.getName()+"&prob="+testDto.getProb();
+        ResultDto resultDto = objectMapper.readValue(response.getBody(), ResultDto.class);
+        String params = "?name="+ resultDto.getName()+"&prob="+resultDto.getProb();
 
         return "/main/result"+params;
 
