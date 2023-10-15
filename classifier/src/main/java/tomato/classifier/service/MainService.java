@@ -22,11 +22,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class MainService {
-
     private final DiseaseRepository diseaseRepository;
-
     private final ObjectMapper objectMapper;
-
     private final RestTemplate restTemplate;
 
     @Value("c:/Users/whffu/VScode/forTest/5_dest/Target/")
@@ -35,15 +32,30 @@ public class MainService {
     @Value("http://127.0.0.1:5000/predict")
     private String url;
     public void saveImg(List<MultipartFile> files) throws IOException {
+        //stream 으로 다 바꾸기
+
+        files.stream()
+                .filter(file -> !file.isEmpty())
+                .forEach(file -> {
+                    try {
+                        String filePath = fileDir + file.getOriginalFilename();
+                        file.transferTo(new File(filePath));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+    }
+         /**
+    public void save(List<MultipartFile> files) throws IOException{
 
         if(!files.isEmpty()){
             for(MultipartFile file : files){
                 String filePath = fileDir + file.getOriginalFilename();
-
                 file.transferTo(new File(filePath));
             }
         }
-    }
+    }**/
 
     public ResultDto predict() throws IOException{
         //간단하게 쓸 수 있는 restTemplate

@@ -1,9 +1,9 @@
 package tomato.classifier.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,8 +13,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    CustomAuthenticationEntryPoint tmp; //이런 식으로 의존성 주입 받아서 사용하면 안됨?
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
@@ -25,14 +27,14 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/main")         //로그인 성공 시 이동할 url
                 .usernameParameter("Id")     //로그인 시 사용할 파라미터 이름 설정
                 .passwordParameter("password")
-                .failureUrl("/auth/login/error") //실패시 이동할 url
-                .and()
-                .logout()
+                .failureUrl("/auth/login/error"); //실패시 이동할 url
+
+        http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
                 .logoutSuccessUrl("/main");
 
         http.authorizeRequests()    //요청 URL 권한 설정 - whitelist 방식으로 허용할 거 빼고 다 인증 필요하게끔
-                .mvcMatchers("/image/**", "result/**").permitAll()
+                .mvcMatchers("/image/**", "/result/**").permitAll()
                 .mvcMatchers("/main/**").permitAll()
                 .antMatchers("/auth/login", "/auth/login/error", "/auth/logout","/auth/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/article").permitAll()    //path var 어캐 넣음
@@ -42,7 +44,10 @@ public class SecurityConfig {
                 .anyRequest().authenticated();
 
         http.exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+                //.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .authenticationEntryPoint(tmp);
+
+
 
         return http.build();
     }
