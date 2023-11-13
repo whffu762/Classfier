@@ -1,6 +1,5 @@
 from flask import Flask
 import os
-from flask_cors import CORS
 
 #db에 질병 설명 저장할 때 학습시킨 순서대로 번호 매겨서 저장해야함 글자가 지멋대로 돼 있는듯
 #학습시킨 순서대로 정렬이 돼 있어야 함
@@ -8,34 +7,32 @@ from flask_cors import CORS
 #플라스크 객체 생성
 #__name__에 객체 변수명(app)이 저장됨
 app = Flask(__name__)
-#CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}}) client와 통신 안해서 이거 필요없음
 
-#Flask가 필요한 데이터를 모아둔 디렉토리
-root = os.path.join("c:", os.sep, "Users", "whffu", "VScode", "forTest")
+#이미지와 AI 모델이 저장된 경로
+forAiPath = os.path.join("home", "ubuntu", "ai")
 
-#root 디렉토리의 들어있는 폴더에 접근하기 위해 리스트로 변환
-temp_dir = os.listdir(root)
-
-#AI 모델이 접근할 경로
-destPath = os.path.join(root, temp_dir[4])
+#AI가 접근할 저장된 이미지의 경로
+inputImgDir = os.path.join(forAiPath, "inputImg")
 
 #이미지가 저장될 경로
-targetPath = os.path.join(root, temp_dir[4], "Target")
+targetPath = os.path.join(inputImgDir, "Target")
 
 #이미지 저장될 개수
 input_num = 5
 
 
-#추후 추가
-#import pymysql
-
+import pymysql
+from setting import host;
+from setting import dbName;
+from setting import user;
+from setting import password;
 
 #DB 연결
 def Dbconnect():
-    conn = pymysql.connect(host = "",
-                      user = "",
-                      password = "",
-                      db = "test",
+    conn = pymysql.connect(host = host,
+                      user = user,
+                      password = password,
+                      db = dbName,
                       charset = "utf8")
 
     return conn
@@ -45,14 +42,14 @@ def Dbclose(conn):
     conn.close
 
 #DB에서 label(질병명) 추출출
-def Select_id(TABLE, ID_CODE):
+def Select_id(TABLE, DISEASE_ID):
     
     conn = Dbconnect()
     cursor = conn.cursor()
 
     sql = '''SELECT {id_code} 
     FROM {table}
-    ORDER BY {id_code}'''.format(table = TABLE, id_code = ID_CODE)
+    ORDER BY {id_code}'''.format(table = TABLE, id_code = DISEASE_ID)
 
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -98,7 +95,7 @@ from PIL import Image
 #@app.route("/predict", methods=['POST'])  
 def mainPredict():
     #입력 데이터가 저장될 경로
-    data_path = destPath
+    data_path = inputImgDir
     #batch_size 
     b_size = 1
 
@@ -125,7 +122,7 @@ def predictDensenet(test_loader, b_size):
     model.classifier = nn.Linear(num_ftrs, num_classes)
 
     #모델이 저장된 경로
-    model_path = os.path.join(root,"{0}","best_densenet-30.pth").format(temp_dir[1])
+    model_path = os.path.join(forAiPath, "best_densenet-30.pth")
 
     #사용할 장치(GPU or CPU)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -135,7 +132,6 @@ def predictDensenet(test_loader, b_size):
 
     #gpu에서 학습된 모델을 gpu에 로드할 때
     #model.load_state_dict(torch.load(model_path))
-
     
     #장치에 모델 적용용
     net = model.to(device)
@@ -174,9 +170,10 @@ def doPredict(val_loader, device, net, b_size, result):
         for i, data in loop:
             inputs = data['image'].to(device)
 
-            #후보군 이거 DB에서 받아오는 방식으로 함함
-            label_path = os.path.join(root,"{0}").format(temp_dir[0])
-            label_list = os.listdir(label_path)
+            #질병 후보들을 DB에서 받아오는 방식으로 함
+            #첫번째 파라미터 : 테이블명
+            #두번째 파라미터 : 테이블에서 가져올 id
+            label_list = Select_id("disease", "id")
 
             #model에 데이터 입력
             outputs = net(inputs)
