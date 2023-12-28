@@ -8,10 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import tomato.classifier.dto.ArticleDto;
 import tomato.classifier.dto.ArticleLikeHateDto;
+import tomato.classifier.dto.LikeHateDto;
 import tomato.classifier.entity.Article;
 import tomato.classifier.entity.ArticleLikeHate;
 import tomato.classifier.entity.Member;
-import tomato.classifier.repository.article.ArticleLikeHateCustomRepository;
+import tomato.classifier.repository.article.queryDsl.ArticleLikeHateCustomRepository;
 import tomato.classifier.repository.article.ArticleLikeHateRepository;
 import tomato.classifier.repository.article.ArticleRepository;
 import tomato.classifier.repository.auth.MemberRepository;
@@ -57,6 +58,8 @@ public class ArticleService {
 
         articleDTO.setDeleteYn(false);
         articleDTO.setUpdateYn(false);
+        articleDTO.setLikeNum(0);
+        articleDTO.setHateNum(0);
         Article article= Article.convertEntity(articleDTO);
         articleRepository.save(article);
 
@@ -91,146 +94,87 @@ public class ArticleService {
     false - hate
     null - nothing
      */
-
-
-    public ArticleLikeHateDto likeHate(ArticleLikeHateDto input, Authentication authentication, String controller){
+    public ArticleLikeHateDto likeHate(ArticleLikeHateDto input){
 
         //input
-        Member member = memberRepository.findById(authentication.getName());
-        Integer articleId = input.getArticleId();
-        Boolean likeHate = input.getLikeHate();
+        Member requestMember = memberRepository.findById(input.getMemberId());
 
-        //DB에 저장된 값
-        ArticleLikeHateDto saved = checkExist(authentication.getName(), articleId);
+        //기존 좋아요 싫어요 갯수
+        Article articleEntity = articleRepository.findById(input.getArticleId())
+                .orElseThrow(()-> new IllegalArgumentException("not Exist article"));
+        ArticleDto beforeArticleDto = ArticleDto.convertDto(articleEntity);
+        Integer oldLikeNum = beforeArticleDto.getLikeNum();
+        Integer oldHateNum = beforeArticleDto.getHateNum();
 
-        //좋아요 싫어요 갯수
-        Article articleEntity = articleRepository.findById(articleId)
-                .orElseThrow(()-> new IllegalArgumentException("not Exist articleId"));
-        ArticleDto article = ArticleDto.convertDto(articleEntity);
-        Integer likeNum = article.getLikeNum();
-        Integer hateNum = article.getHateNum();
+        //기존에 DB 에 저장되어있는 좋아요 싫어요
+        ArticleLikeHateDto savedArticleLikeHateDto = checkExistLikeHate(input);
+
+        Boolean requestStatus = input.getStatus();
 
 
-        switch (controller){
-            case "onlyLike" :
-                input = onlyLike(member, article, saved, input, likeHate, likeNum);
-                break;
-            case "onlyHate" :
-                input = onlyHate(member, article, saved, input, likeHate, hateNum);
-                break;
-            case "unLikeAndHate" :
-                input = unLikeAndHate(member, article, saved, input, likeNum, hateNum);
-                break;
-            case "unHateAndLike" :
-                input = unHateAndLike(member, article, saved, input, likeNum, hateNum);
-                break;
+        if(savedArticleLikeHateDto == null){
+            if(requestStatus){
+                beforeArticleDto.setLikeNum(++oldLikeNum);
+            }
+            else{
+                beforeArticleDto.setHateNum(++oldHateNum);
+            }
         }
+        else{
+            Boolean savedStatus = savedArticleLikeHateDto.getStatus();
+            if(requestStatus){
+                if(savedStatus == null){
+                    beforeArticleDto.setLikeNum(++oldLikeNum);
+                }
+                else if(savedStatus){
+                    beforeArticleDto.setLikeNum(--oldLikeNum);
+                    input.setStatus(null);
+                }
+                else{
+                    beforeArticleDto.setLikeNum(++oldLikeNum);
+                    beforeArticleDto.setHateNum(--oldHateNum);
+                }
+            }
+            else{
+                if(savedStatus == null){
+                    beforeArticleDto.setHateNum(++oldHateNum);
+                }
+                else if(savedStatus){
+                    beforeArticleDto.setLikeNum(--oldLikeNum);
+                    beforeArticleDto.setHateNum(++oldHateNum);
+                }
+                else{
+                    beforeArticleDto.setHateNum(--oldHateNum);
+                    input.setStatus(null);
+                }
+            }
+            input.setId(savedArticleLikeHateDto.getId());
+        }
+
+        Article afterArticle = Article.convertEntity(beforeArticleDto);
+        articleRepository.save(afterArticle);
+        articleLikeHateRepository.save(ArticleLikeHate.convertEntity(input, requestMember,afterArticle));
 
         return input;
     }
 
-    public ArticleLikeHateDto checkExist(String memberId, Integer articleId){
-        //DB 에 이미 저장된 적이 있는지 확인
-        ArticleLikeHate tmp = articleLikeHateCustomRepository.findLikeHate(memberId, articleId);
+    public ArticleLikeHateDto checkExistLikeHate(ArticleLikeHateDto input){
 
-        if(tmp == null){
+        //DB 에 저장된 값 있는지 확인
+        ArticleLikeHate savedArticleLikeHate = articleLikeHateCustomRepository.findLikeHate(input.getMemberId(), input.getArticleId());
+        if(savedArticleLikeHate == null){
             return null;
         }
 
-        return ArticleLikeHateDto.convertDto(tmp);
+        return ArticleLikeHateDto.convertDto(savedArticleLikeHate);
     }
 
-
-    public ArticleLikeHateDto checkSavedNull(ArticleLikeHateDto saved, ArticleLikeHateDto input ,Boolean likeHate){
-        //Null 인지 확인
-
-        if(saved != null){
-            input = saved;
-        }
-
-        input.setLikeHate(likeHate);
-
-        return input;
-    }
-
-    public ArticleLikeHateDto onlyLike(Member member, ArticleDto article, ArticleLikeHateDto saved, ArticleLikeHateDto input ,
-                                       Boolean likeHate, Integer likeNum){
-        //갯수 count, likeHate 변환
-        if(likeHate){
-            article.setLikeNum(++likeNum);
-        }
-        else{
-            article.setLikeNum(--likeNum);
-            likeHate = null;
-        }
-
-        input = checkSavedNull(saved, input, likeHate);
-
-        articleLikeHateRepository.save(ArticleLikeHate.convertEntity(input, member));
-        articleRepository.save(Article.convertEntity(article));
-
-        return input;
-
-    }
-
-    public ArticleLikeHateDto unLikeAndHate(Member member, ArticleDto article, ArticleLikeHateDto saved, ArticleLikeHateDto input,
-                                            Integer likeNum, Integer hateNum){
-        //갯수 count, likeHate 변환
-        article.setLikeNum(--likeNum);
-        article.setHateNum(++hateNum);
-        boolean likeHate = false;
-
-        input = checkSavedNull(saved, input, likeHate);
-
-        articleLikeHateRepository.save(ArticleLikeHate.convertEntity(input, member));
-        articleRepository.save(Article.convertEntity(article));
-
-        return input;
-    }
-
-    public ArticleLikeHateDto onlyHate(Member member, ArticleDto article, ArticleLikeHateDto saved, ArticleLikeHateDto input,
-                                            Boolean likeHate, Integer hateNum){
-        //갯수 count, likeHate 변환
-        if(likeHate){
-            article.setHateNum(++hateNum);
-            likeHate = false;
-        }
-        else{
-            article.setHateNum(--hateNum);
-            likeHate = null;
-        }
-
-        input = checkSavedNull(saved, input, likeHate);
-
-        articleLikeHateRepository.save(ArticleLikeHate.convertEntity(input, member));
-        articleRepository.save(Article.convertEntity(article));
-
-        return input;
-    }
-
-    public ArticleLikeHateDto unHateAndLike(Member member, ArticleDto article, ArticleLikeHateDto saved, ArticleLikeHateDto input,
-                                            Integer likeNum, Integer hateNum){
-
-        //갯수 count, likeHate 변환
-        article.setHateNum(--hateNum);
-        article.setLikeNum(++likeNum);
-        boolean likeHate = true;
-
-        input = checkSavedNull(saved, input, likeHate);
-
-        articleLikeHateRepository.save(ArticleLikeHate.convertEntity(input, member));
-        articleRepository.save(Article.convertEntity(article));
-
-        return input;
-
-    }
-
-
-    public ArticleLikeHateDto tmpFunc(List<ArticleLikeHate> list, Integer articleId){
+    public ArticleLikeHateDto getArticleLikeHateInfo(List<ArticleLikeHate> likeHates, Integer articleId){
 
         ArticleLikeHateDto result = new ArticleLikeHateDto();
-        for(ArticleLikeHate likeHate : list){
-            if(likeHate.getArticleId().equals(articleId)){
+
+        for(ArticleLikeHate likeHate : likeHates){
+            if(likeHate.getArticle().getArticleId().equals(articleId)){
                 result = ArticleLikeHateDto.convertDto(likeHate);
             }
         }
@@ -238,9 +182,6 @@ public class ArticleService {
 
         return result;
     }
-
-
-
 
     /*
     이전 방식

@@ -1,9 +1,6 @@
 package tomato.classifier.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import tomato.classifier.entity.ArticleLikeHate;
 
 @Data
@@ -20,13 +17,15 @@ public class ArticleLikeHateDto {
 
     private Boolean likeHate;
 
+    private Boolean status;
+
     public static ArticleLikeHateDto convertDto(ArticleLikeHate articleLikeHate){
 
         return new ArticleLikeHateDto().builder()
                 .id(articleLikeHate.getId())
                 .memberId(articleLikeHate.getMember().getMemberId())
-                .articleId(articleLikeHate.getArticleId())
-                .likeHate(articleLikeHate.getLikeHate())
+                .articleId(articleLikeHate.getArticle().getArticleId())
+                .status(articleLikeHate.getStatus())
                 .build();
     }
 }

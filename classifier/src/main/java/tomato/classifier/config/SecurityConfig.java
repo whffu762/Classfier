@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,7 +17,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    CustomAuthenticationEntryPoint tmp; //이런 식으로 의존성 주입 받아서 사용하면 안됨?
+    @Bean
+    public CustomAuthenticationEntryPoint getCustomAuthenticationEntryPoint(){
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    //passwordEncoder 빈 등록을 직접 해줘야 함
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
@@ -30,11 +41,11 @@ public class SecurityConfig {
                 .failureUrl("/auth/login/error"); //실패시 이동할 url
 
         http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                .logoutUrl("/auth/logout")
                 .logoutSuccessUrl("/main");
 
         http.authorizeRequests()    //요청 URL 권한 설정 - whitelist 방식으로 허용할 거 빼고 다 인증 필요하게끔
-                .mvcMatchers("/image/**", "/result/**").permitAll()
+                .mvcMatchers("/image/**","/result/**", "/js/**").permitAll()
                 .mvcMatchers("/main/**").permitAll()
                 .antMatchers("/auth/login", "/auth/login/error", "/auth/logout","/auth/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/article").permitAll()    //path var 어캐 넣음
@@ -45,16 +56,8 @@ public class SecurityConfig {
 
         http.exceptionHandling()
                 //.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .authenticationEntryPoint(tmp);
-
-
+                .authenticationEntryPoint(getCustomAuthenticationEntryPoint());
 
         return http.build();
-    }
-
-    //passwordEncoder 빈 등록을 직접 해줘야 함
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

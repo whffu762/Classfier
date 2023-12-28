@@ -50,42 +50,12 @@ public class ArticleApiController {
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
+    @PostMapping("/like")
+    public ResponseEntity<ArticleLikeHateDto> likeHate(@RequestBody ArticleLikeHateDto articleLikeHateDto, Authentication authentication){
 
-    @PostMapping("/onlyLike")
-    public ResponseEntity<ArticleLikeHateDto> onlyLike(@RequestBody ArticleLikeHateDto articleLikeHateDto, Authentication authentication){
-
-        ArticleLikeHateDto result =  articleService.likeHate(articleLikeHateDto, authentication, "onlyLike");
-        log.info("onlyLike 호출 {}" ,articleLikeHateDto.getLikeHate());
-
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
-
-    @PostMapping("/onlyHate")
-    public ResponseEntity<ArticleLikeHateDto> onlyHate(@RequestBody ArticleLikeHateDto articleLikeHateDto, Authentication authentication){
-
-        ArticleLikeHateDto result =  articleService.likeHate(articleLikeHateDto, authentication, "onlyHate");
-        log.info("onlyHate 호출 {}" ,articleLikeHateDto.getLikeHate());
+        articleLikeHateDto.setMemberId(authentication.getName());
+        ArticleLikeHateDto result =  articleService.likeHate(articleLikeHateDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
-
-    @PostMapping("/unLikeAndHate")
-    public ResponseEntity<ArticleLikeHateDto> unLikeAndHate(@RequestBody ArticleLikeHateDto articleLikeHateDto, Authentication authentication){
-
-        ArticleLikeHateDto result =  articleService.likeHate(articleLikeHateDto, authentication, "unLikeAndHate");
-        log.info("unLikeAndHate 호출 {}",articleLikeHateDto.getLikeHate());
-
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
-    @PostMapping("/unHateAndLike")
-    public ResponseEntity<ArticleLikeHateDto> unHateAndLike(@RequestBody ArticleLikeHateDto articleLikeHateDto, Authentication authentication){
-
-        ArticleLikeHateDto result =  articleService.likeHate(articleLikeHateDto, authentication, "unHateAndLike");
-        log.info("unHateAndLike 호출 {}" ,articleLikeHateDto.getLikeHate());
-
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
 }

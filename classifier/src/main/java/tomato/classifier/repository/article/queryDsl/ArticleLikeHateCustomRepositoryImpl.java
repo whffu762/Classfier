@@ -1,4 +1,4 @@
-package tomato.classifier.repository.article;
+package tomato.classifier.repository.article.queryDsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -16,12 +16,15 @@ public class ArticleLikeHateCustomRepositoryImpl implements ArticleLikeHateCusto
         this.queryFactory = jpaQueryFactory;
     }
 
-
     public ArticleLikeHate findLikeHate(String memberId, Integer articleId){
         return queryFactory
                 .select(articleLikeHate)
                 .from(articleLikeHate)
-                .where(articleLikeHate.articleId.eq(articleId), articleLikeHate.member.memberId.eq(memberId))
+                .where(articleLikeHate.article.articleId.eq(articleId), articleLikeHate.member.memberId.eq(memberId))
                 .fetchOne();
     }
+
+
+
+
 }

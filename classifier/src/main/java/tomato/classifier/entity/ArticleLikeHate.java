@@ -1,9 +1,6 @@
 package tomato.classifier.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import tomato.classifier.dto.ArticleLikeHateDto;
 
 import javax.persistence.*;
@@ -20,24 +17,25 @@ public class ArticleLikeHate{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column
-    private Integer articleId;
+    @ManyToOne
+    @JoinColumn(name = "articleId")
+    private Article article;
 
     @Column
-    private Boolean likeHate;
+    private Boolean status;
 
-    public static ArticleLikeHate convertEntity(ArticleLikeHateDto articleLikeHateDto, Member member){
+    public static ArticleLikeHate convertEntity(ArticleLikeHateDto articleLikeHateDto, Member member, Article article){
+
 
         return new ArticleLikeHate().builder()
                 .id(articleLikeHateDto.getId())
                 .member(member)
-                .articleId(articleLikeHateDto.getArticleId())
-                .likeHate(articleLikeHateDto.getLikeHate())
+                .article(article)
+                .status(articleLikeHateDto.getStatus())
                 .build();
 
     }
-
 }

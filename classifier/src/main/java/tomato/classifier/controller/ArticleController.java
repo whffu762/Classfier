@@ -60,8 +60,8 @@ public class ArticleController {
             MemberDto authenticationUser = memberService.findAuthenticatedUserInfo(authentication);
             model.addAttribute("nickName", authenticationUser.getNickname());
 
-            ArticleLikeHateDto tmp = articleService.tmpFunc(authenticationUser.getLikeHatesList(), articleId);
-            model.addAttribute("likeHate", tmp);
+            ArticleLikeHateDto likeHateInfo = articleService.getArticleLikeHateInfo(authenticationUser.getLikeHatesList(), articleId);
+            model.addAttribute("likeHate", likeHateInfo);
             log.info("article authentication {} ", authentication);
         }
 

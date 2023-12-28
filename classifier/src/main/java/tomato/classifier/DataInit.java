@@ -20,17 +20,14 @@ public class DataInit {
     @PostConstruct
     @Builder
     public void init(){
-        int i = 1;
-
-        articleRepository.save(new Article(i, "titleB", "writerB", "contentB", false,false, null, 0, 0));
-        articleRepository.save(new Article(++i, "titleB", "writerB", "contentB", false,false, null, 0, 0));
-        articleRepository.save(new Article(++i, "titleC", "writerC", "contentC", false,false, null, 0, 0));
-        articleRepository.save(new Article(++i, "titleD", "writerD", "contentD", false,false, null, 0, 0));
-        articleRepository.save(new Article(++i, "titleE", "writerE", "contentE", false,false, null, 0, 0));
+        articleRepository.save(new Article(null, "titleB", "writerB", "contentB", false,false, null, 0, 0));
+        articleRepository.save(new Article(null, "titleB", "writerB", "contentB", false,false, null, 0, 0));
+        articleRepository.save(new Article(null, "titleC", "writerC", "contentC", false,false, null, 0, 0));
+        articleRepository.save(new Article(null, "titleD", "writerD", "contentD", false,false, null, 0, 0));
+        articleRepository.save(new Article(null, "titleE", "writerE", "contentE", false,false, null, 0, 0));
     }
 
     private final MemberRepository memberRepository;
-
     private final PasswordEncoder passwordEncoder;
     @PostConstruct
     public void memberInit(){

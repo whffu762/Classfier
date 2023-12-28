@@ -25,11 +25,12 @@ public class MainService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    @Value("c:/Users/whffu/VScode/forTest/5_dest/Target/")
-    private String fileDir;
+    @Value("/home/ubuntu/ai/inputImg/target")
+    private String fileDir; //입력된 이미지가 저장될 경로
 
     @Value("http://127.0.0.1:5000/predict")
-    private String url;
+    private String url; //Flask 서버의 URL
+
     public void saveImg(List<MultipartFile> files) throws IOException {
         //stream 으로 다 바꾸기
 
@@ -45,16 +46,6 @@ public class MainService {
                 });
 
     }
-         /**
-    public void save(List<MultipartFile> files) throws IOException{
-
-        if(!files.isEmpty()){
-            for(MultipartFile file : files){
-                String filePath = fileDir + file.getOriginalFilename();
-                file.transferTo(new File(filePath));
-            }
-        }
-    }**/
 
     public ResultDto predict() throws IOException{
         //간단하게 쓸 수 있는 restTemplate
@@ -72,21 +63,4 @@ public class MainService {
 
         return DiseaseDto.convertDto(target, resultDto.getProb());
     }
-
-//
-//    public String predict1() throws IOException{
-//        //헤더를 만들 수 있는 restTemplate
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setAccept(Arrays.asList(new MediaType[] {MediaType.APPLICATION_JSON}));
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<String> entity = new HttpEntity<>("",headers);
-//
-//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-//        testDto testDto = objectMapper.readValue(response.getBody(), testDto.class);
-//        String params = "?name="+ testDto.getName()+"&prob="+testDto.getProb();
-//
-//        return "/main/result"+params;
-//
-//    }
 }

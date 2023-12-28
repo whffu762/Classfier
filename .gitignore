@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 HELP.md
 .gradle
 build/
@@ -40,3 +41,13 @@ out/
 
 ### VS Code ###
 .vscode/
+=======
+__pycache__/
+
+.vscode/
+
+tomatoEnv/
+
+setting.py
+
+>>>>>>> origin/V6

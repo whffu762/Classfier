@@ -32,8 +32,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -75,9 +76,6 @@ compileQuerydsl {
 
 //QueryDSL이 compileClassPath를 상속하도록 설정
 configurations {
-    complieOnly {
-        extendsFrom annotationProcessor
-    }
     querydsl.extendsFrom compileClasspath
 }
 //QueryDSL 4 end

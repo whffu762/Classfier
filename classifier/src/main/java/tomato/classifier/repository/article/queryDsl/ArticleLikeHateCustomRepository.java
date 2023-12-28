@@ -1,4 +1,4 @@
-package tomato.classifier.repository.article;
+package tomato.classifier.repository.article.queryDsl;
 
 import tomato.classifier.entity.ArticleLikeHate;
 

@@ -43,7 +43,7 @@
 </head>
 <body>
 
-<div th:replace="/layout/fragments/nav.html :: nav"></div>
+<div th:replace="/fragments/nav.html :: nav"></div>
 
 <div class="container" id="wrapper">
     <div class="py-5 text-center">
@@ -69,13 +69,13 @@
         </div>
     </span>
     <div class="d-flex justify-content-evenly" style="margin-top: 1rem">
-    <button class="btn btn-link" style="color: gray" th:onclick="" type="button">아이디 찾기</button>
-    <button class="btn btn-link" style="color: gray" th:onclick="" type="button">비밀번호 찾기</button>
-    <button class="btn btn-link" style="color: gray" th:onclick="|location.href='@{/auth/register}'|" type="button">회원가입</button>
+    <button class="btn btn-link" style="color: grey" th:onclick="" type="button">아이디 찾기</button>
+    <button class="btn btn-link" style="color: grey" th:onclick="" type="button">비밀번호 찾기</button>
+    <button class="btn btn-link" style="color: grey" th:onclick="|location.href='@{/auth/register}'|" type="button">회원가입</button>
     </div>
 </div>
 
-<footer th:replace="/layout/fragments/footer.html :: footer"></footer>
+<footer th:replace="/fragments/footer.html :: footer"></footer>
 
 </body>
 </html>

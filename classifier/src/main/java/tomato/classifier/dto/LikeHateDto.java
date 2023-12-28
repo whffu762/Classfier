@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 public class LikeHateDto {
 
-    private Boolean like;
-    private Boolean hate;
+    Boolean likeHate;
+    ArticleDto articleDto;
+
 }
