@@ -1,0 +1,33 @@
+logging:
+  level:
+    hello:
+      springmvc: info
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+              nodeValue: DEBUG
+        SQL: DEBUG
+spring:
+  jpa:
+    show:
+      sql: 'true'
+    defer-datasource-initialization: 'true'
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show-sql: 'true'
+        format_sql: 'true'
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: tomato
+    password: '232323'
+    url: jdbc:mysql://localhost:3307/tomato_disease_classifier?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+  sql:
+    init:
+      mode: always
+  messages:
+    basename: errors

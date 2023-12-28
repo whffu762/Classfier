@@ -11,7 +11,6 @@ import tomato.classifier.dto.main.DiseaseDto;
 import tomato.classifier.dto.main.ResultDto;
 import tomato.classifier.entity.Disease;
 import tomato.classifier.repository.main.DiseaseRepository;
-import tomato.classifier.test.testDto;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,22 +65,6 @@ public class MainService {
         return resultDto;
     }
 
-    public String predict1() throws IOException{
-        //헤더를 만들 수 있는 restTemplate
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(new MediaType[] {MediaType.APPLICATION_JSON}));
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>("",headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        testDto testDto = objectMapper.readValue(response.getBody(), testDto.class);
-        String params = "?name="+ testDto.getName()+"&prob="+testDto.getProb();
-
-        return "/main/result"+params;
-
-    }
-
     public DiseaseDto getDiseaseInfo(ResultDto resultDto){
 
         Disease target = diseaseRepository.findById(resultDto.getName())
@@ -89,4 +72,21 @@ public class MainService {
 
         return DiseaseDto.convertDto(target, resultDto.getProb());
     }
+
+//
+//    public String predict1() throws IOException{
+//        //헤더를 만들 수 있는 restTemplate
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setAccept(Arrays.asList(new MediaType[] {MediaType.APPLICATION_JSON}));
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<String> entity = new HttpEntity<>("",headers);
+//
+//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+//        testDto testDto = objectMapper.readValue(response.getBody(), testDto.class);
+//        String params = "?name="+ testDto.getName()+"&prob="+testDto.getProb();
+//
+//        return "/main/result"+params;
+//
+//    }
 }
