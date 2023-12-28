@@ -2,12 +2,14 @@ package tomato.classifier.dto;
 
 import lombok.*;
 import tomato.classifier.data.Role;
+import tomato.classifier.entity.ArticleLikeHate;
 import tomato.classifier.entity.Member;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 
 @Getter
@@ -36,6 +38,8 @@ public class MemberDto {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private List<ArticleLikeHate> likeHatesList;
+
     public static MemberDto convertDto(Member member){
 
         return new MemberDto().builder()
@@ -44,6 +48,7 @@ public class MemberDto {
                 .email(member.getEmail())
                 .password(member.getPassword())
                 .role(member.getRole())
+                .likeHatesList(member.getLikeHatesList())
                 .build();
     }
 

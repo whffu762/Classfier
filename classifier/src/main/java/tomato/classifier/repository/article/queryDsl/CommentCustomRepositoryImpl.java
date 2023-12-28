@@ -1,9 +1,8 @@
-package tomato.classifier.repository.article;
+package tomato.classifier.repository.article.queryDsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import tomato.classifier.entity.Comment;
-import tomato.classifier.repository.article.CommentCustomRepository;
 
 import java.util.List;
 

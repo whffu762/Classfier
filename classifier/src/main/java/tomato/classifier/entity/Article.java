@@ -1,6 +1,7 @@
 package tomato.classifier.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import tomato.classifier.dto.ArticleDto;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Article extends BaseTime{
 
     @Id
@@ -37,32 +39,41 @@ public class Article extends BaseTime{
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @Column
+    private Integer likeNum;
+
+    @Column
+    private Integer hateNum;
+
     public static Article convertEntity(ArticleDto target){
+        /*
         if(target.getArticleId() != null){
             throw new IllegalArgumentException("id should be null");
-        }
+        }*/
 
-        return new Article(
-                target.getArticleId(),
-                target.getTitle(),
-                target.getArticleWriter(),
-                target.getContent(),
-                target.isDeleteYn(),
-                target.isUpdateYn(),
-                target.getComments()
-        );
+        return new Article().builder()
+                .articleId(target.getArticleId())
+                .title(target.getTitle())
+                .articleWriter(target.getArticleWriter())
+                .content(target.getContent())
+                .deleteYn(target.isDeleteYn())
+                .updateYn(target.isUpdateYn())
+                .comments(target.getComments())
+                .likeNum(target.getLikeNum())
+                .hateNum(target.getHateNum())
+                .build();
     }
 
     public void patch(ArticleDto articleDTO){
-        if(this.articleId != articleDTO.getArticleId()){
+        if(!this.articleId.equals(articleDTO.getArticleId())){
             throw new IllegalArgumentException("게시글 수정 실패");
         }
-        if(articleDTO.getTitle() != ""){
+        if(!articleDTO.getTitle().equals("")){
             this.title=articleDTO.getTitle();
             this.updateYn = true;
         }
 
-        if(articleDTO.getContent() != "") {
+        if(!articleDTO.getContent().equals("")) {
             this.content = articleDTO.getContent();
             this.updateYn = true;
         }

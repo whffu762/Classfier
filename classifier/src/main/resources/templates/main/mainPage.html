@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeLeaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,14 +53,10 @@
                     <img src="/image/loading.gif" style="width:100px; height:100px;">
                 </div>
                 <div class="image-upload">
-                    <form id="submitForm" enctype="multipart/form-data">
-<<<<<<< HEAD
-                        <label for="files" class="form-label">이미지 입력</label>
-=======
+                    <form th:method="post" th:action="@{/main/input}" id="submitForm" enctype="multipart/form-data">
                         <label for="files" class="form-label">Multiple files input</label>
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
-                        <input class="form-control" type="file" id="files" multiple>
-                        <button id="file-send" class="btn btn-light" type="button">전송</button>
+                        <input class="form-control" type="file" id="files" name="imgFiles" accept=".jpg, .png, .jpeg" multiple>
+                        <button class="btn btn-light" id="file-send-btn" type="submit">전송</button>
                     </form>
                 </div>
             <div class="image-show" id="image-show"></div>
@@ -74,57 +71,25 @@
         $("#div_load_image").hide();
     }
 
-    const submitButton = document.querySelector("#file-send")
+    const submitForm = document.querySelector("#submitForm")
+    const submitButton = document.querySelector("#file-send-btn")
     const uploadFiles  = document.querySelector("#files")
-    const formData = new FormData();
-<<<<<<< HEAD
-    const url = "/main/input"
-=======
-    const url = "http://127.0.0.1:5000/input"
 
+    submitForm.addEventListener('submit', function(event) {
+        event.preventDefault();
 
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
+        const fLength = uploadFiles.files.length
 
-    submitButton.addEventListener('click', function() {
-        const file_Length = uploadFiles.files.length
-
-        if(file_Length != 5) {
-            alert("이미지는 5장을 선택해야 합니다.")
-<<<<<<< HEAD
+        if(fLength === 5) {
+            $(this).unbind('submit').submit();
+            $("#div_load_image").show();
+            $("#wrapper").css({ "opacity":"0.7"});
+            submitButton.disabled = true;
         }
         else {
-=======
-        } else {
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
-            $("#div_load_image").show();
-            for (let i = 0; i < 5; i++) {
-                formData.append("files", uploadFiles.files[i]);
-            }
-            fetch(url, {
-                method: "POST",
-                body: formData,
-                redirect: "follow"
-            }).then(response => {
-<<<<<<< HEAD
-                console.log(response)
-                location.href = response.url
-            })
+            alert("이미지는 5장을 선택해야 합니다.")
         }
-=======
-                return response.json()
-            }).then(json => {
-                const result_url = json.result_url
-                const result = json.diseaseInfo
-                const params = Object.entries(result).map(e =>e.join('=')).join('&')
-                const url = result_url+"?"+params
-
-                window.location.href = url
-            })
-        }
-
->>>>>>> fbf704387ef36c13eaade9e742c00edc1bc55146
     })
-
 </script>
 </body>
 </html>

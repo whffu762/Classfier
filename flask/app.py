@@ -9,13 +9,13 @@ import os
 app = Flask(__name__)
 
 #이미지와 AI 모델이 저장된 경로
-forAiPath = os.path.join("home", "ubuntu", "ai")
+forAiPath = os.path.join("/home", "ubuntu", "ai")
 
 #AI가 접근할 저장된 이미지의 경로
 inputImgDir = os.path.join(forAiPath, "inputImg")
 
 #이미지가 저장될 경로
-targetPath = os.path.join(inputImgDir, "Target")
+targetPath = os.path.join(inputImgDir, "target")
 
 #이미지 저장될 개수
 input_num = 5

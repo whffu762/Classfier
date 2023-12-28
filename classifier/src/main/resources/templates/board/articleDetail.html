@@ -18,98 +18,185 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
     <style>
-        #wrapper{
+        #wrapper {
             height: auto;
             padding-bottom: 500px;
             min-height: 100%;
         }
-        footer{
+
+        footer {
             height: 500px;
-            position : relative;
-            transform : translateY(-100%);
+            position: relative;
+            transform: translateY(-100%);
+        }
+
+        .likeHateBtn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+
+        }
+
+        #likeHateContainer {
+            margin: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 
 </head>
+
 <body>
 
 <div th:replace="/layout/fragments/nav.html :: nav"></div>
 
 <input id="hiddenId" type="hidden" th:value="${article.articleId}">
 <div id="wrapper">
-<div class="bg-image text-center shadow-1-strong text-white" id="background"
-     style="flex: 1;background-image: url('/image/tomato.jpg'); height:17vh; background-repeat:no-repeat; background-size:cover;">
-    <div class="py-5 text-center">
-        <h2>자유 게시판</h2>
+    <div class="bg-image text-center shadow-1-strong text-white" id="background"
+         style="flex: 1;background-image: url('/image/tomato.jpg'); height:17vh; background-repeat:no-repeat; background-size:cover;">
+        <div class="py-5 text-center">
+            <h2>자유 게시판</h2>
+        </div>
+    </div>
+
+    <div class="container" style="width: 60%; margin-top: 1rem">
+        <!-- 게시글 -->
+        <table class="table mb-1">
+            <thead>
+            <tr>
+                <th scope="col"><h1 th:text="${article.title}">title</h1></th>
+                <td>
+                    <div th:if="${article.articleWriter} == ${nickName}">
+                        <button style="display: inline-block; float: right; margin-right: 0.5rem"
+                                type="button" class="btn btn-danger" id="deleteBtn" th:onclick="deleteArticleFunc()">삭제
+                        </button>
+                        <button style="display: inline-block; float: right;margin-right: 0.2rem" type="button"
+                                class="btn btn-primary"
+                                th:onclick="|location.href='@{/article/edit(articleId=${article.articleId})}'|">수정
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <th scope="row" th:text="${article.articleWriter} +  '&emsp; | &emsp;'  + ${article.updateTime}">
+                    작성자|작성시간
+                </th>
+                <td><p th:text="'댓글 수 : ' + ${comments.size()}"></p></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height:10rem; font-size: 24px">
+                    <pre th:text="${article.content}">내용</pre>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- 게시글 -->
+
+        <!-- 추천 비추천 -->
+        <div id="likeHateContainer">
+            <form>
+                <div>
+                    <div th:if="${likeHate == null}">
+                        <input type="checkbox" class="btn-check" id="notLoginLike" th:onclick="needLoginLikeHate()">
+                        <label class="btn btn-outline-success" th:id="likeLabel" for="notLoginLike"
+                               style="margin-right: 3rem;">
+                            <div class="likeHateBtn">
+                                <div th:text="좋아요" style="margin-right:1em;"></div>
+                                <div th:text="${article.likeNum}"></div>
+                            </div>
+                        </label>
+
+                        <input type="checkbox" class="btn-check" id="notLoginHate" th:onclick="needLoginLikeHate()">
+                        <label class="btn btn-outline-secondary" th:id="hateLabel" for="notLoginHate">
+                            <div class="likeHateBtn">
+                                <div th:text="싫어요" style="margin-right:1em;"></div>
+                                <div th:text="${article.hateNum}"></div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div th:if="${likeHate != null}">
+                        <input type="checkbox" class="btn-check" id="likeBtn"
+                               th:checked="${likeHate.getStatus() != null and likeHate.getStatus()}">
+                        <label class="btn btn-outline-success" th:id="likeLabel" for="likeBtn"
+                               style="margin-right: 3rem;">
+                            <div class="likeHateBtn">
+                                <div th:text="좋아요" style="margin-right:1em;"></div>
+                                <div id="likeNum" th:text="${article.likeNum}"></div>
+                            </div>
+                        </label>
+
+                        <input type="checkbox" class="btn-check" id="hateBtn"
+                               th:checked="${likeHate.getStatus() != null and !likeHate.getStatus()}">
+                        <label class="btn btn-outline-secondary" th:id="hateLabel" for="hateBtn">
+                            <div class="likeHateBtn">
+                                <div th:text="싫어요" style="margin-right:1em;"></div>
+                                <div th:id="hateNum" th:text="${article.hateNum}"></div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 추천 비추천 -->
+
+        <!-- 댓글 입력-->
+        <form>
+            <div class="mb-3">
+                <input class="form-control form-control-sm" aria-label=".form-control-sm example"
+                       type="text" th:value="${nickName}" id="commentWriter" disabled>
+                <textarea class="form-control form-control-sm" id="commentContent" rows="3"
+                          placeholder="댓글 입력"></textarea>
+            </div>
+            <p>
+                <button class="btn btn-primary btn-lg" type="button" id="commentBtn"
+                        style="font-size:16px; width: 80px; height: 40px; margin-right:1rem">
+                    작성
+                </button>
+            </p>
+        </form>
+        <!-- 댓글 입력-->
+    </div>
+
+    <div class="container" style="width: 70%">
+        <!-- 댓글 출력 -->
+        <table class="table">
+            <tbody>
+            <tr th:each="comment : ${comments}">
+                <td th:text="${comment.commentWriter}" th:class="col-sm-2" style="word-break: break-all" disabled>작성자
+                </td>
+                <td th:text="${comment.updateTime}" th:class="col-sm-2">작성일</td>
+                <td th:text="${comment.content}" th:class="col-sm-7" style="word-break: break-all">내용</td>
+                <td th:class="col-md-1">
+                    <div>
+                        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul th:if="${comment.commentWriter} == ${nickName}" class="dropdown-menu">
+                            <li><a class="dropdown-item" th:id="commentSelect" data-bs-toggle="modal"
+                                   data-bs-target="#updateModal"
+                                   th:onclick="commentSelectFunc([[${comment.commentId}]], [[${comment.commentWriter}]], [[${comment.content}]])">수정</a>
+                            </li>
+                            <li><a class="dropdown-item" th:id="commentDelete"
+                                   th:onclick="commentDeleteFunc([[${comment.commentId}]])">삭제</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- 댓글 출력 -->
     </div>
 </div>
-<div class="container" style="width: 60%; margin-top: 1rem">
-<table class="table mb-1">
-    <thead>
-    <tr>
-        <th scope="col"><h1 th:text="${article.title}">title</h1></th>
-        <td>
-            <div th:if="${article.articleWriter} == ${nickName}">
-                <button style="display: inline-block; float: right; margin-right: 0.5rem"
-                        type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
-                <button style="display: inline-block; float: right;margin-right: 0.2rem" type="button" class="btn btn-primary"
-                        th:onclick="|location.href='@{/article/edit(articleId=${article.articleId})}'|">수정</button>
-            </div>
-        </td>
-    </tr>
-    </thead>
 
-    <tbody>
-    <tr>
-        <th scope="row" th:text="${article.articleWriter} +  '&emsp; | &emsp;'  + ${article.updateTime}">작성자  |  작성시간</th>
-        <td><p th:text = "'댓글 수 : ' + ${comments.size()}"></p></td>
-    </tr>
-    <tr>
-        <td colspan="2" style="height:10rem; font-size: 24px"><pre th:text="${article.content}">내용</pre></td>
-    </tr>
-    </tbody>
-</table>
-
-    <form>
-        <div class="mb-3">
-            <input class="form-control form-control-sm" aria-label=".form-control-sm example"
-                   type="text" th:value="${nickName}" id="commentWriter" disabled>
-            <textarea class="form-control form-control-sm" id="commentContent" rows="3"  placeholder="댓글 입력"></textarea>
-        </div>
-        <p>
-            <button class="btn btn-primary btn-lg" type="button" id="commentBtn" style="font-size:16px; width: 80px; height: 40px; margin-right:1rem">
-                작성
-            </button>
-        </p>
-    </form>
-
-
-</div>
-<div class="container" style="width: 70%">
-    <table class="table">
-        <tbody>
-        <tr th:each="comment : ${comments}">
-            <td th:text="${comment.commentWriter}" th:class="col-sm-2" style="word-break: break-all" disabled>작성자</td>
-            <td th:text="${comment.updateTime}" th:class="col-sm-2">작성일</td>
-            <td th:text="${comment.content}"th:class="col-sm-7" style="word-break: break-all">내용</td>
-            <td th:class="col-md-1">
-                <div>
-                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul th:if="${comment.commentWriter} == ${nickName}" class="dropdown-menu">
-                        <li><a class="dropdown-item" th:id="commentSelect" data-bs-toggle="modal" data-bs-target="#updateModal" th:onclick="commentSelectFunc([[${comment.commentId}]], [[${comment.commentWriter}]], [[${comment.content}]])">수정</a></li>
-                        <li><a class="dropdown-item" th:id="commentDelete" th:onclick="commentDeleteFunc([[${comment.commentId}]])">삭제</a></li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</div>
-<!-- Modal -->
-
+<!-- 댓글 수정 Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -121,8 +208,10 @@
                 <form th:method="post">
                     <div class="mb-3">
                         <input id="commentUpdateId" th:type="hidden" value="">
-                        <input class="form-control form-control-sm" type="text" aria-label=".form-control-sm example" id="commentUpdateWriter" value="" disabled>
-                        <textarea class="form-control form-control-sm" id="commentUpdateContent" rows="3"  value=""></textarea>
+                        <input class="form-control form-control-sm" type="text" aria-label=".form-control-sm example"
+                               id="commentUpdateWriter" value="" disabled>
+                        <textarea class="form-control form-control-sm" id="commentUpdateContent" rows="3"
+                                  value=""></textarea>
                     </div>
                 </form>
             </div>
@@ -133,84 +222,67 @@
         </div>
     </div>
 </div>
+<!-- 댓글 수정 Modal -->
+
 
 <script>
     const article_Id = document.querySelector("#hiddenId").value;
     const submitBtn = document.querySelector("#commentBtn");
     const comment_writer = document.querySelector("#commentWriter").value;
 
-    submitBtn.addEventListener("click", function(){
+    submitBtn.addEventListener("click", function () {
 
         const url = `/article/${article_Id}/comment-add`;
-        console.log(url);
-
-        if(!comment_writer){
+        if (!comment_writer) {
             fetch(url).then(response => {
-                console.log(response)
                 window.location.href = response.url
             })
-        }
-
-        else{
+        } else {
             const comment = {
-                articleId : article_Id,
-                commentWriter : comment_writer,
-                content : document.querySelector("#commentContent").value
+                articleId: article_Id,
+                commentWriter: comment_writer,
+                content: document.querySelector("#commentContent").value
             }
-            console.log(comment)
 
-            console.log(comment.content.trim())
-            console.log(comment.content)
-
-            if(comment.content.trim()){
-                fetch(url,{
+            if (comment.content.trim()) {
+                fetch(url, {
                     method: "POST",
-                    body : JSON.stringify(comment),
-                    headers : {
+                    body: JSON.stringify(comment),
+                    headers: {
                         "Content-Type": "application/json"
                     }
                 }).then(response => {
                     const msg = (response.ok) ? "댓글이 등록되었습니다" : "오류 발생"
                     alert(msg);
-
                     window.location.reload();
                 })
-            }
-            else{
-                const msg = "공백이 있습니다"
-                alert(msg)
+            } else {
+                alert("글을 입력하세요")
             }
         }
-
     })
 
 
-    const deleteBtn = document.querySelector("#deleteBtn");
-
-    deleteBtn.addEventListener("click", function(){
+    function deleteArticleFunc() {
         const url = "/article/delete/" + article_Id
-
         const result = confirm("글을 삭제하겠습니까")
-        if(result){
-            fetch(url,{
+        if (result) {
+            fetch(url, {
                 method: "DELETE",
             }).then(response => {
                 const msg = (response.ok) ? "글이 삭제되었습니다" : "오류 발생"
                 alert(msg);
-
-                window.location.href ="/article";
+                window.location.href = "/article";
             })
         }
-    })
+    }
 
 
-    function commentDeleteFunc(comment_id){
-        const url = "/comment-delete/"+comment_id;
-        console.log(url);
-
+    function commentDeleteFunc(comment_id) {
+        const url = "/comment-delete/" + comment_id;
         const result = confirm("글을 삭제하겠습니까")
-        if(result){
-            fetch(url,{
+        if (result) {
+            fetch(url, {
                 method: "DELETE"
             }).then(response => {
                 const msg = (response.ok) ? "글이 삭제되었습니다" : "오류 발생"
@@ -221,45 +293,110 @@
         }
     }
 
-    function commentSelectFunc(comment_id, writer, content){
+    function commentSelectFunc(comment_id, writer, content) {
+
         $('#commentUpdateId').val(comment_id)
         $('#commentUpdateWriter').val(writer)
         $('#commentUpdateContent').val(content)
     }
 
     const commentUpdateBtn = document.querySelector("#commentUpdateBtn");
-    commentUpdateBtn.addEventListener("click", function(){
+    commentUpdateBtn.addEventListener("click", function () {
         const comment = {
-            articleId : article_Id,
-            commentId : document.querySelector("#commentUpdateId").value,
-            commentWriter : document.querySelector("#commentUpdateWriter").value,
-            content : document.querySelector("#commentUpdateContent").value
+            articleId: article_Id,
+            commentId: document.querySelector("#commentUpdateId").value,
+            commentWriter: document.querySelector("#commentUpdateWriter").value,
+            content: document.querySelector("#commentUpdateContent").value
         }
-
-        console.log(comment)
-
-        const url = "/comment-edit/"+ comment.commentId
-        console.log(url);
-
-        if(comment.content != ""){
-            fetch(url,{
+        const url = "/comment-edit/" + comment.commentId
+        if (comment.content.trim()) {
+            fetch(url, {
                 method: "PATCH",
-                body : JSON.stringify(comment),
-                headers : {
+                body: JSON.stringify(comment),
+                headers: {
                     "Content-Type": "application/json"
                 }
             }).then(response => {
                 const msg = (response.ok) ? "댓글이 수정되었습니다" : "오류 발생"
                 alert(msg);
-
                 window.location.reload();
             })
-        }
-        else{
-            const msg = "공백이 있습니다"
-            alert(msg)
+        } else {
+            alert("글을 입력하세요")
         }
     })
+
+    function needLoginLikeHate() {
+        const url = `/article/${article_Id}/likeOrHate`;
+        fetch(url).then(response => {
+            window.location.href = response.url
+        })
+        alert("로그인이 필요합니다")
+    }
+
+    const likeBtn = document.querySelector("#likeBtn");
+    likeBtn.addEventListener("change", function () {
+        const likeBtn = document.querySelector("#likeBtn");
+        const hateBtn = document.querySelector("#hateBtn");
+        const likeLabel = document.querySelector("#likeNum");
+        const hateLabel = document.querySelector("#hateNum");
+
+        let url = "/article/like";
+        let likeCnt = Number(likeLabel.innerText);
+        let hateCnt = Number(hateLabel.innerText);
+        if (hateBtn.checked) {
+            hateBtn.checked = false;
+            hateLabel.innerText = --hateCnt;
+            likeLabel.innerText = ++likeCnt;
+        } else {
+            if (likeBtn.checked) {
+                likeLabel.innerText = ++likeCnt;
+
+            } else {
+                likeLabel.innerText = --likeCnt;
+            }
+        }
+        makeLikeHateFetch(url, true);
+    });
+
+    const hateBtn = document.querySelector("#hateBtn");
+    hateBtn.addEventListener("change", function () {
+        const likeBtn = document.querySelector("#likeBtn");
+        const hateBtn = document.querySelector("#hateBtn");
+        const likeLabel = document.querySelector("#likeNum");
+        const hateLabel = document.querySelector("#hateNum");
+
+        let url = "/article/like";
+        let hateCnt = Number(hateLabel.innerText);
+        let likeCnt = Number(likeLabel.innerText);
+
+        if (likeBtn.checked) {
+            likeBtn.checked = false;
+            likeLabel.innerText = --likeCnt;
+            hateLabel.innerText = ++hateCnt;
+        } else {
+            if (hateBtn.checked) {
+                hateLabel.innerText = ++hateCnt;
+            } else {
+                hateLabel.innerText = --hateCnt;
+            }
+        }
+        makeLikeHateFetch(url, false);
+    })
+
+    function makeLikeHateFetch(url, check) {
+        const Dto = {
+            articleId: article_Id,
+            status : check
+        }
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(Dto),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    }
 </script>
 
 <footer th:replace="/layout/fragments/footer.html :: footer"></footer>
