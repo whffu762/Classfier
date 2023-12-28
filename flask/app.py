@@ -1,5 +1,6 @@
 from flask import Flask
 import os
+<<<<<<< HEAD
 from flask_cors import CORS
 
 #db에 질병 설명 저장할 때 학습시킨 순서대로 번호 매겨서 저장해야함 글자가 지멋대로 돼 있는듯
@@ -10,6 +11,12 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}})
 
+=======
+#from flask_cors import CORS
+
+app = Flask(__name__)
+#CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}}) client와 통신 안해서 이거 필요없음
+>>>>>>> origin/V3
 
 #Flask가 필요한 데이터를 모아둔 디렉토리
 root = os.path.join("c:", os.sep, "Users", "whffu", "VScode", "forTest")
@@ -28,7 +35,11 @@ input_num = 5
 
 
 
+<<<<<<< HEAD
 import pymysql
+=======
+#import pymysql
+>>>>>>> origin/V3
 
 #DB 연결
 def Dbconnect():
@@ -69,6 +80,7 @@ def Select_id(TABLE, ID_CODE):
 
 
 
+<<<<<<< HEAD
 
 from flask import request, redirect, url_for, Response
 import requests
@@ -98,6 +110,15 @@ def save_img():
         savePath = os.path.join(targetPath, img.filename)   #각 파일에 순차적으로 접근하면서 저장
         img.save(savePath)
 
+=======
+#이미지 저장
+@app.route("/predict", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
+def predict():
+    response = mainPredict()
+    clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
+    
+    return  response
+>>>>>>> origin/V3
 
 
 import torch
@@ -136,8 +157,11 @@ def mainPredict():
 
     json_object = predictDensenet(test_loader, b_size)
     
+<<<<<<< HEAD
     clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
     
+=======
+>>>>>>> origin/V3
     return json_object 
 
 

@@ -1,11 +1,12 @@
 package tomato.classifier.dto.main;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@ToString
+@Getter
+@Setter
 public class ResultDto {
-    public String name;
-    public Integer prob;
+
+    private String name;
+    private String prob;
 }

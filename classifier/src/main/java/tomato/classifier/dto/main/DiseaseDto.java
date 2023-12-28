@@ -18,13 +18,13 @@ public class DiseaseDto {
 
     private Integer prob;
 
-    public static DiseaseDto convertDto(Disease target, ResultDto result){
+    public static DiseaseDto convertDto(Disease target, Integer prob){
         return new DiseaseDto(
                 target.getId(),
                 target.getDName(),
                 target.getSrc(),
                 target.getSolution(),
-                result.getProb()
+                prob
         );
     }
 }

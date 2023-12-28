@@ -53,7 +53,11 @@
                 </div>
                 <div class="image-upload">
                     <form id="submitForm" enctype="multipart/form-data">
+<<<<<<< HEAD
                         <label for="files" class="form-label">Multiple files input</label>
+=======
+                        <label for="files" class="form-label">이미지 입력</label>
+>>>>>>> origin/V3
                         <input class="form-control" type="file" id="files" multiple>
                         <button id="file-send" class="btn btn-light" type="button">전송</button>
                     </form>
@@ -73,16 +77,25 @@
     const submitButton = document.querySelector("#file-send")
     const uploadFiles  = document.querySelector("#files")
     const formData = new FormData();
+<<<<<<< HEAD
     const url = "http://127.0.0.1:5000/input"
 
 
+=======
+    const url = "/main/input"
+>>>>>>> origin/V3
 
     submitButton.addEventListener('click', function() {
         const file_Length = uploadFiles.files.length
 
         if(file_Length != 5) {
             alert("이미지는 5장을 선택해야 합니다.")
+<<<<<<< HEAD
         } else {
+=======
+        }
+        else {
+>>>>>>> origin/V3
             $("#div_load_image").show();
             for (let i = 0; i < 5; i++) {
                 formData.append("files", uploadFiles.files[i]);
@@ -92,6 +105,7 @@
                 body: formData,
                 redirect: "follow"
             }).then(response => {
+<<<<<<< HEAD
                 return response.json()
             }).then(json => {
                 const result_url = json.result_url
@@ -103,6 +117,12 @@
             })
         }
 
+=======
+                console.log(response)
+                location.href = response.url
+            })
+        }
+>>>>>>> origin/V3
     })
 
 </script>
