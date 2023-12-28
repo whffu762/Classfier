@@ -125,8 +125,6 @@ public class MemberService implements UserDetailsService { //DB에서 회원 정
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Member member = memberRepository.findById(id);
 
-        log.info("load is called");
-
         if(member == null){
             throw new UsernameNotFoundException(id);
         }

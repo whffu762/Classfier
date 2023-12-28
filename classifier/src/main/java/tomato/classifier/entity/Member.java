@@ -1,11 +1,11 @@
 package tomato.classifier.entity;
 
 import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import tomato.classifier.data.Role;
 import tomato.classifier.dto.MemberDto;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class Member {
 
     @Id
+    @Column
     private String memberId;
 
     @Column(unique = true)
@@ -30,6 +31,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ArticleLikeHate> likeHatesList;
+
     public static Member convertEntity(MemberDto member){
 
         return new Member().builder()
@@ -38,6 +43,7 @@ public class Member {
                 .password(member.getPassword())
                 .email(member.getEmail())
                 .role(member.getRole())
+                .likeHatesList(member.getLikeHatesList())
                 .build();
 
     }

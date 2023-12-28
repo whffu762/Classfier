@@ -41,12 +41,12 @@
 <div th:replace="/layout/fragments/nav.html :: nav"></div>
 
 <div id="wrapper">
-    <div class="bg-image p-5 text-center shadow-1-strong text-white"
-         style="flex: 1;background-image: url('/image/tomato.jpg'); height:100vh; background-repeat:no-repeat; background-size:cover;">
-        <div class="container">
-            <div class="py-5 text-center">
-                <h1>Tomato Leaf Classification</h1>
-                <h3>다양한 각도로 한 잎을 찍어주세요</h3></div>
+<div class="bg-image p-5 text-center shadow-1-strong text-white"
+     style="flex: 1;background-image: url('/image/tomato.jpg'); height:100vh; background-repeat:no-repeat; background-size:cover;">
+    <div class="container">
+        <div class="py-5 text-center">
+            <h1>Tomato Leaf Classification</h1>
+            <h3>다양한 각도로 한 잎을 찍어주세요</h3></div>
             <div class="container">
                 <div id="div_load_image" style="position:absolute; top:50%; left:50%;width:0px;height:0px; z-index:9999; background:#f0f0f0; filter:alpha(opacity=50); opacity:alpha * 0.5; margin:auto; padding:0; text-align:center">
                     <img src="/image/loading.gif" style="width:100px; height:100px;">
@@ -54,14 +54,14 @@
                 <div class="image-upload">
                     <form th:method="post" th:action="@{/main/input}" id="submitForm" enctype="multipart/form-data">
                         <label for="files" class="form-label">Multiple files input</label>
-                        <input class="form-control" type="file" id="files" name="imgFiles" multiple>
+                        <input class="form-control" type="file" id="files" name="imgFiles" accept=".jpg, .png, .jpeg" multiple>
                         <button class="btn btn-light" id="file-send-btn" type="submit">전송</button>
                     </form>
                 </div>
-                <div class="image-show" id="image-show"></div>
-            </div>
-        </div> <!-- /container -->
-    </div>
+            <div class="image-show" id="image-show"></div>
+        </div>
+    </div> <!-- /container -->
+</div>
 </div>
 
 <footer th:replace="/layout/fragments/footer.html :: footer"></footer>
@@ -80,16 +80,15 @@
         const fLength = uploadFiles.files.length
 
         if(fLength === 5) {
-            $(this).unbind('submit').submit()
+            $(this).unbind('submit').submit();
             $("#div_load_image").show();
+            $("#wrapper").css({ "opacity":"0.7"});
             submitButton.disabled = true;
         }
         else {
             alert("이미지는 5장을 선택해야 합니다.")
         }
     })
-
-
 </script>
 </body>
 </html>

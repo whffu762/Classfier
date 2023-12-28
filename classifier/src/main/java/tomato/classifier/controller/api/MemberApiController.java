@@ -5,14 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import tomato.classifier.dto.CustomUserDetails;
 import tomato.classifier.dto.MemberDto;
 import tomato.classifier.dto.editMember.EmailDto;
 import tomato.classifier.dto.editMember.NicknameDto;
@@ -21,7 +18,6 @@ import tomato.classifier.dto.editMember.PasswordDto;
 import tomato.classifier.service.MemberService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 //@RestController("/auth")
 @Controller

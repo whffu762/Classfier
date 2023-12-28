@@ -53,6 +53,7 @@
                     <th>작성자</th>
                     <th>작성일</th>
                     <th>댓글수</th>
+                    <th>추천</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,6 +69,7 @@
                     <td th:text="${article.articleWriter}">작성자</td>
                     <td th:text="${article.updateTime}">작성일</td>
                     <td th:text="${article.commentCount}">댓글수</td>
+                    <td th:text="${article.likeNum}">추천</td>
                 </tr>
                 </tbody>
             </table>
