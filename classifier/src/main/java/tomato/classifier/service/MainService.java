@@ -11,6 +11,8 @@ import tomato.classifier.dto.main.DiseaseDto;
 import tomato.classifier.dto.main.ResultDto;
 import tomato.classifier.entity.Disease;
 import tomato.classifier.repository.main.DiseaseRepository;
+import tomato.classifier.test.testDto;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,14 +45,13 @@ public class MainService {
         }
     }
 
-    public String predict() throws IOException{
+    public ResultDto predict() throws IOException{
         //간단하게 쓸 수 있는 restTemplate
 
         String response = restTemplate.getForObject(url, String.class);
         ResultDto resultDto = objectMapper.readValue(response, ResultDto.class);
-        String params = "?name="+ resultDto.getName()+"&prob="+resultDto.getProb();
 
-        return "/main/result"+params;
+        return resultDto;
     }
 
     public String predict1() throws IOException{
@@ -62,21 +63,18 @@ public class MainService {
         HttpEntity<String> entity = new HttpEntity<>("",headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        ResultDto resultDto = objectMapper.readValue(response.getBody(), ResultDto.class);
-        String params = "?name="+ resultDto.getName()+"&prob="+resultDto.getProb();
+        testDto testDto = objectMapper.readValue(response.getBody(), testDto.class);
+        String params = "?name="+ testDto.getName()+"&prob="+testDto.getProb();
 
         return "/main/result"+params;
 
     }
 
-    public DiseaseDto getDiseaseInfo(Map<String, Object> result){
+    public DiseaseDto getDiseaseInfo(ResultDto resultDto){
 
-        String name = (String) result.get("name");
-        Integer prob = (int) Math.round(Double.parseDouble((String) result.get("prob")));
-
-        Disease target = diseaseRepository.findById((name))
+        Disease target = diseaseRepository.findById(resultDto.getName())
                 .orElseThrow(()-> new IllegalArgumentException("질병 조회 실패"));
 
-        return DiseaseDto.convertDto(target, prob);
+        return DiseaseDto.convertDto(target, resultDto.getProb());
     }
 }
