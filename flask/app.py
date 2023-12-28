@@ -8,7 +8,7 @@ from flask_cors import CORS
 #플라스크 객체 생성
 #__name__에 객체 변수명(app)이 저장됨
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}})
 
 
 #Flask가 필요한 데이터를 모아둔 디렉토리
@@ -81,16 +81,13 @@ def input_img():
     
     data = mainPredict()
     headers = {"Content-Type": "application/json; charset=utf-8"}
-    requests.post("http://localhost:8080/main/predict", data, headers= headers)
-    #return redirect(url_for('mainPredict'), code=307)
-    #return redirect("http://localhost:8080/result")
+    diseaseInfo = requests.post("http://localhost:8080/main/predict", data, headers= headers)
     
-    json_url = {}
-    json_url['result_url'] = "/main/result"
-    response = json.dumps(json_url)
+    json_resp= {}
+    json_resp['result_url'] = "/main/result"
+    json_resp['diseaseInfo'] = diseaseInfo.json()   #.text로 받으면 js에서 JSON.parse()를 통해 object로 바꿔야 함
     
-    return response
-    
+    return json.dumps(json_resp)
     
 def save_img():
     #imgList는 http 요청 body에 들어있는 이미지 데이터를 리스트로 변환한 변수
