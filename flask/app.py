@@ -1,29 +1,10 @@
 from flask import Flask
+app = Flask(__name__)
+
 import os
-<<<<<<< HEAD
-<<<<<<< HEAD
-from flask_cors import CORS
-=======
->>>>>>> origin/V6
-
-#db에 질병 설명 저장할 때 학습시킨 순서대로 번호 매겨서 저장해야함 글자가 지멋대로 돼 있는듯
-#학습시킨 순서대로 정렬이 돼 있어야 함
-
-#플라스크 객체 생성
-#__name__에 객체 변수명(app)이 저장됨
-app = Flask(__name__)
-
-<<<<<<< HEAD
-=======
-#from flask_cors import CORS
-
-app = Flask(__name__)
-#CORS(app, resources={r'*':{ 'origins' : 'http://localhost:8080'}}) client와 통신 안해서 이거 필요없음
->>>>>>> origin/V3
-=======
 #이미지와 AI 모델이 저장된 경로
-forAiPath = os.path.join("/home", "ubuntu", "ai")
->>>>>>> origin/V6
+# forAiPath = os.path.join("/home", "ubuntu", "ai")
+forAiPath = os.path.join("D:", os.sep, "vscode", "forTest")
 
 #AI가 접근할 저장된 이미지의 경로
 inputImgDir = os.path.join(forAiPath, "inputImg")
@@ -35,28 +16,21 @@ targetPath = os.path.join(inputImgDir, "target")
 input_num = 5
 
 
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-import pymysql
-=======
-#import pymysql
->>>>>>> origin/V3
-=======
 import pymysql
 from setting import host;
 from setting import dbName;
 from setting import user;
 from setting import password;
->>>>>>> origin/V6
+from setting import port;
 
 #DB 연결
 def Dbconnect():
     conn = pymysql.connect(host = host,
-                      user = user,
-                      password = password,
-                      db = dbName,
-                      charset = "utf8")
+                            port = port,
+                            user = user,
+                            password = password,
+                            db = dbName,
+                            charset = "utf8")
 
     return conn
 
@@ -89,14 +63,6 @@ def Select_id(TABLE, DISEASE_ID):
 
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-from flask import request, redirect, url_for, Response
-import requests
-
-=======
->>>>>>> origin/V6
 #이미지 저장
 @app.route("/predict", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
 def predict():
@@ -105,23 +71,11 @@ def predict():
     
     return  response
 
-<<<<<<< HEAD
-=======
-#이미지 저장
-@app.route("/predict", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
-def predict():
-    response = mainPredict()
-    clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
-    
-    return  response
->>>>>>> origin/V3
-=======
 #폴더 내 파일 삭제 - 한 번 predict한 후 input 이미지가 지워줘야 함
 def clearFolder(Path) :
     if os.path.exists(Path):
         for file in os.scandir(Path):
             os.remove(file.path)
->>>>>>> origin/V6
 
 
 import torch
@@ -152,14 +106,8 @@ def mainPredict():
 
     json_object = predictDensenet(test_loader, b_size)
     
-<<<<<<< HEAD
-<<<<<<< HEAD
     clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
     
-=======
->>>>>>> origin/V3
-=======
->>>>>>> origin/V6
     return json_object 
 
 

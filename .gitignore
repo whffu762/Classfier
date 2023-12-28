@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 HELP.md
 .gradle
 build/
@@ -7,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 application.properties
+application.yml
 .DS_store
 src/main/java/tomato/classifier/test/
 src/main/resources/templates/test/
@@ -41,13 +41,13 @@ out/
 
 ### VS Code ###
 .vscode/
-=======
+
 __pycache__/
 
 .vscode/
 
-tomatoEnv/
+flaskenv/
 
 setting.py
 
->>>>>>> origin/V6
+test.py

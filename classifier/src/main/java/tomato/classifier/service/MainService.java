@@ -2,6 +2,7 @@ package tomato.classifier.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,14 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MainService {
     private final DiseaseRepository diseaseRepository;
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    @Value("/home/ubuntu/ai/inputImg/target")
+    @Value("D:/vscode/forTest/inputImg/target/")
+    //@Value("/home/ubuntu/ai/inputImg/target/")
     private String fileDir; //입력된 이미지가 저장될 경로
 
     @Value("http://127.0.0.1:5000/predict")
@@ -41,7 +44,8 @@ public class MainService {
                         String filePath = fileDir + file.getOriginalFilename();
                         file.transferTo(new File(filePath));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.error("image input error : { }",e);
+                        //사진이 정상적으로 저장되지 않았을 때의 예외 처리 구현 필요
                     }
                 });
 
@@ -51,9 +55,8 @@ public class MainService {
         //간단하게 쓸 수 있는 restTemplate
 
         String response = restTemplate.getForObject(url, String.class);
-        ResultDto resultDto = objectMapper.readValue(response, ResultDto.class);
-
-        return resultDto;
+        return objectMapper.readValue(response, ResultDto.class);
+        //여기서도 flask에게 결과 못 받았을 때의 예외 처리
     }
 
     public DiseaseDto getDiseaseInfo(ResultDto resultDto){
