@@ -4,20 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import tomato.classifier.dto.main.DiseaseDto;
-import tomato.classifier.dto.main.ResultDto;
+import tomato.classifier.dto.DiseaseDto;
 import tomato.classifier.entity.Disease;
 import tomato.classifier.repository.main.DiseaseRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +27,7 @@ public class MainService {
     //@Value("/home/ubuntu/ai/inputImg/target/")
     private String fileDir; //입력된 이미지가 저장될 경로
 
-    @Value("http://127.0.0.1:5000/predict")
+    @Value("http://127.0.0.1:5000/predict-tomato-disease")
     private String url; //Flask 서버의 URL
 
     public void saveImg(List<MultipartFile> files) throws IOException {
@@ -51,19 +47,22 @@ public class MainService {
 
     }
 
-    public ResultDto predict() throws IOException{
+    public DiseaseDto predict() throws IOException{
         //간단하게 쓸 수 있는 restTemplate
 
         String response = restTemplate.getForObject(url, String.class);
-        return objectMapper.readValue(response, ResultDto.class);
-        //여기서도 flask에게 결과 못 받았을 때의 예외 처리
-    }
+        log.info(response);
 
-    public DiseaseDto getDiseaseInfo(ResultDto resultDto){
+        DiseaseDto tmp = objectMapper.readValue(response, DiseaseDto.class);
 
-        Disease target = diseaseRepository.findById(resultDto.getName())
+        log.info("id : " + tmp.getId());
+        log.info("probability : " + tmp.getProbability());
+
+        Disease target = diseaseRepository.findById(tmp.getId())
                 .orElseThrow(()-> new IllegalArgumentException("질병 조회 실패"));
 
-        return DiseaseDto.convertDto(target, resultDto.getProb());
+        return target.convertDto(tmp.getProbability());
+
+        //여기서도 flask에게 결과 못 받았을 때의 예외 처리
     }
 }

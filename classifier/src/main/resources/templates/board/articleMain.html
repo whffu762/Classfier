@@ -41,14 +41,14 @@
         <div class="col-md-12">
             <div style="margin-top:2rem;">
                 <button class="btn btn-secondary"
-                        th:onclick="|location.href='@{/article/add}'|" type="button" style="float: right;">
+                        th:onclick="|location.href='@{/article/write}'|" type="button" style="float: right;">
                     글쓰기
                 </button>
             </div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>게시글번호</th>
+                    <th>번호</th>
                     <th>제목</th>
                     <th>작성자</th>
                     <th>작성일</th>
@@ -59,11 +59,11 @@
                 <tbody>
                 <tr th:each="article : ${articles}">
                     <td>
-                        <a th:href="@{/article/detail/{articleId}(articleId=${article.articleId})}"
+                        <a th:href="@{'/article?no='+${article.articleId}}"
                            th:text="${articleStat.count}">게시글 번호</a>
                     </td>
                     <td>
-                        <a th:href="@{/article/detail/{articleId}(articleId=${article.articleId})}"
+                        <a th:href="@{'/article?no='+${article.articleId}}"
                            th:text="${article.title}">제목</a>
                     </td>
                     <td th:text="${article.articleWriter}">작성자</td>

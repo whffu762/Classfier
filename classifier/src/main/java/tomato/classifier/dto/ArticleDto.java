@@ -1,18 +1,16 @@
 package tomato.classifier.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import tomato.classifier.entity.Article;
 import tomato.classifier.entity.Comment;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ArticleDto {
 
     private Integer articleId;
@@ -25,7 +23,7 @@ public class ArticleDto {
 
     private List<Comment> comments;
 
-    private Integer commentCount;
+    private Integer commentCount;   //
 
     private Integer likeNum;
 
@@ -38,28 +36,18 @@ public class ArticleDto {
     private String updateTime;   //바뀐 부분
 
 
-    public static ArticleDto convertDto(Article article){
+    public Article convertEntity(){
 
-        Integer count = 0;
-
-        for(Comment comment : article.getComments()){
-            if(!comment.isDeleteYn()){
-               count++;
-            }
-        }
-
-        return new ArticleDto().builder()
-                .articleId(article.getArticleId())
-                .title(article.getTitle())
-                .content(article.getContent())
-                .articleWriter(article.getArticleWriter())
-                .comments(article.getComments())
-                .commentCount(count)
-                .likeNum(article.getLikeNum())
-                .hateNum(article.getHateNum())
-                .deleteYn(article.isDeleteYn())
-                .updateYn(article.isUpdateYn())
-                .updateTime(article.getUpdateTime())
+        return Article.builder()
+                .articleId(this.articleId)
+                .title(this.title)
+                .content(this.content)
+                .articleWriter(this.articleWriter)
+                .comments(this.comments)
+                .likeNum(this.likeNum)
+                .hateNum(this.hateNum)
+                .deleteYn(this.deleteYn)
+                .updateYn(this.updateYn)
                 .build();
     }
 }

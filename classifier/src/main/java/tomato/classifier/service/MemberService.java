@@ -51,33 +51,26 @@ public class MemberService implements UserDetailsService { //DB에서 회원 정
         }
     }
 
-    public MemberDto register(MemberDto memberDto){
+    public void register(MemberDto memberDto){
 
-        memberDto.setRole(Role.ROLE_MEMBER); //@InitBinder로 대체 가능?
+        memberDto.setRole(Role.ROLE_MEMBER);
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
 
-        Member member = Member.convertEntity(memberDto);
-
-        memberRepository.save(member);
-
-        return memberDto;
+        memberRepository.save(memberDto.convertEntity());
     }
 
     public MemberDto findAuthenticatedUserInfo(Authentication authentication){
 
-        Member member = memberRepository.findById(authentication.getName());
-
-        return MemberDto.convertDto(member);
-
+        return memberRepository.findById(authentication.getName()).convertDto();
     }
 
     public MemberDto checkReqMemberId(EditBase inputDto, Authentication authentication){
+
         if(!inputDto.getMemberId().equals(authentication.getName())){
             throw new IllegalArgumentException("사용자 요청이 잘못됨 - id 불일치");
         }
-        Member user = memberRepository.findById(inputDto.getMemberId());
 
-        return MemberDto.convertDto(user);
+        return memberRepository.findById(inputDto.getMemberId()).convertDto();
     }
 
     public MemberDto editNickname(NicknameDto inputDto, Authentication authentication){
@@ -85,8 +78,10 @@ public class MemberService implements UserDetailsService { //DB에서 회원 정
         MemberDto memberDto = checkReqMemberId(inputDto, authentication);   //이 부분은 interceptor 같은걸로 빼버리면 좋을 듯
         memberDto.setNickname(inputDto.getNickname());
 
-        Member member = Member.convertEntity(memberDto);
-        memberRepository.save(member);
+        log.info("memberDto = " + memberDto.getMemberId());
+        log.info("memberDto = " + memberDto.getNickname());
+
+        memberRepository.save(memberDto.convertEntity());
 
         return memberDto;
     }
@@ -96,42 +91,36 @@ public class MemberService implements UserDetailsService { //DB에서 회원 정
         MemberDto memberDto = checkReqMemberId(inputDto, authentication);
         memberDto.setEmail(inputDto.getEmail());
 
-        Member member = Member.convertEntity(memberDto);
-        memberRepository.save(member);
+        memberRepository.save(memberDto.convertEntity());
 
         return memberDto;
     }
 
     public boolean checkPassword(PasswordDto inputDto, Authentication authentication){
+
         MemberDto memberDto = checkReqMemberId(inputDto, authentication);
 
         return passwordEncoder.matches(inputDto.getPassword(), memberDto.getPassword());
 
     }
 
-    public MemberDto editPassword(NewPasswordDto inputDto, Authentication authentication){
+    public void editPassword(NewPasswordDto inputDto, Authentication authentication){
 
         MemberDto memberDto = checkReqMemberId(inputDto, authentication);
         memberDto.setPassword(passwordEncoder.encode(inputDto.getPassword()));
 
-        Member member = Member.convertEntity(memberDto);
-        memberRepository.save(member);
-
-        return memberDto;
+        memberRepository.save(memberDto.convertEntity());
     }
 
     //조회한 결과를 UserDetails 에 저장
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Member member = memberRepository.findById(id);
 
+        Member member = memberRepository.findById(id);
         if(member == null){
             throw new UsernameNotFoundException(id);
         }
 
-        log.info("memberId = {}", member.getMemberId());
-
-        return new CustomUserDetails(MemberDto.convertDto(member));
+        return new CustomUserDetails(member.convertDto());
     }
-
 }

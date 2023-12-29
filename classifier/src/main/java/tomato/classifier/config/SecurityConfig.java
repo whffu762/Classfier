@@ -48,8 +48,7 @@ public class SecurityConfig {
                 .mvcMatchers("/image/**","/result/**", "/js/**").permitAll()
                 .mvcMatchers("/main/**").permitAll()
                 .antMatchers("/auth/login", "/auth/login/error", "/auth/logout","/auth/register").permitAll()
-                .antMatchers(HttpMethod.GET, "/article").permitAll()    //path var 어캐 넣음
-                .mvcMatchers("/article/detail/**").permitAll()
+                .antMatchers(HttpMethod.GET ,"/article", "/articles").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .mvcMatchers( "/comment/**","auth/edit/**").hasRole("MEMBER")
                 .anyRequest().authenticated();

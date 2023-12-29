@@ -9,7 +9,7 @@ submitBtn.addEventListener("click", function(){
 
     console.log(article)
 
-    const url = "/article/add";
+    const url = "/article";
     fetch(url,{
         method: "POST",
         body : JSON.stringify(article),
@@ -19,7 +19,6 @@ submitBtn.addEventListener("click", function(){
     }).then(response => {
         const msg = (response.ok) ? "글이 등록되었습니다" : "오류 발생"
         alert(msg);
-
-        window.location.href ="/article";
+        window.location.href ="/articles";
     })
 })

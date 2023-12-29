@@ -15,23 +15,78 @@ import javax.annotation.PostConstruct;
 @Component
 @RequiredArgsConstructor
 public class DataInit {
-
     private final ArticleRepository articleRepository;
     @PostConstruct
     @Builder
     public void init(){
-        articleRepository.save(new Article(null, "titleB", "writerB", "contentB", false,false, null, 0, 0));
-        articleRepository.save(new Article(null, "titleB", "writerB", "contentB", false,false, null, 0, 0));
-        articleRepository.save(new Article(null, "titleC", "writerC", "contentC", false,false, null, 0, 0));
-        articleRepository.save(new Article(null, "titleD", "writerD", "contentD", false,false, null, 0, 0));
-        articleRepository.save(new Article(null, "titleE", "writerE", "contentE", false,false, null, 0, 0));
+        articleRepository.save(Article.builder()
+                .articleId(null)
+                .title("titleA")
+                .articleWriter("writerA")
+                .content("contentA")
+                .comments(null)
+                .likeNum(0)
+                .hateNum(0)
+                .deleteYn(false)
+                .updateYn(false)
+                .build());
+
+        articleRepository.save(Article.builder()
+                .articleId(null)
+                .title("titleB")
+                .articleWriter("writerB")
+                .content("contentB")
+                .comments(null)
+                .likeNum(0)
+                .hateNum(0)
+                .deleteYn(false)
+                .updateYn(false)
+                .build()
+        );
+
+        articleRepository.save(Article.builder()
+                .articleId(null)
+                .title("titleC")
+                .articleWriter("writerC")
+                .content("contentC")
+                .comments(null)
+                .likeNum(0)
+                .hateNum(0)
+                .deleteYn(false)
+                .updateYn(false)
+                .build()
+        );
+        articleRepository.save(Article.builder()
+                .articleId(null)
+                .title("titleD")
+                .articleWriter("writerD")
+                .content("contentD")
+                .comments(null)
+                .likeNum(0)
+                .hateNum(0)
+                .deleteYn(false)
+                .updateYn(false)
+                .build()
+        );
+        articleRepository.save(Article.builder()
+                .articleId(null)
+                .title("titleE")
+                .articleWriter("writerE")
+                .content("contentE")
+                .comments(null)
+                .likeNum(0)
+                .hateNum(0)
+                .deleteYn(false)
+                .updateYn(false)
+                .build()
+        );
     }
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     @PostConstruct
     public void memberInit(){
-        memberRepository.save(new Member().builder()
+        memberRepository.save(Member.builder()
                 .memberId("testA")
                 .nickname("A")
                 .email("testA@email.com")
@@ -40,6 +95,4 @@ public class DataInit {
                 .likeHatesList(null)
                 .build());
     }
-
-
 }

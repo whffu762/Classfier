@@ -14,10 +14,12 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class MemberDto {
+
+    private Long id;
 
     @NotBlank
     private String memberId;
@@ -40,15 +42,16 @@ public class MemberDto {
 
     private List<ArticleLikeHate> likeHatesList;
 
-    public static MemberDto convertDto(Member member){
+    public Member convertEntity(){
 
-        return new MemberDto().builder()
-                .memberId(member.getMemberId())
-                .nickname(member.getNickname())
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .role(member.getRole())
-                .likeHatesList(member.getLikeHatesList())
+        return Member.builder()
+                .id(this.id)
+                .memberId(this.memberId)
+                .nickname(this.nickname)
+                .email(this.email)
+                .password(this.password)
+                .role(this.role)
+                .likeHatesList(this.likeHatesList)
                 .build();
     }
 

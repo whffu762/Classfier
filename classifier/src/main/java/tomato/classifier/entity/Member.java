@@ -8,10 +8,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Getter
 public class Member {
 
     @Id
@@ -39,16 +39,16 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<ArticleLikeHate> likeHatesList;
 
-    public static Member convertEntity(MemberDto member){
+    public MemberDto convertDto(){
 
-        return new Member().builder()
-                .memberId(member.getMemberId())
-                .nickname(member.getNickname())
-                .password(member.getPassword())
-                .email(member.getEmail())
-                .role(member.getRole())
-                .likeHatesList(member.getLikeHatesList())
+        return MemberDto.builder()
+                .id(this.id)
+                .memberId(this.memberId)
+                .nickname(this.nickname)
+                .email(this.email)
+                .password(this.password)
+                .role(this.role)
+                .likeHatesList(this.likeHatesList)
                 .build();
-
     }
 }

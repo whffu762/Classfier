@@ -11,6 +11,7 @@ import tomato.classifier.dto.ArticleLikeHateDto;
 import tomato.classifier.dto.LikeHateDto;
 import tomato.classifier.entity.Article;
 import tomato.classifier.entity.ArticleLikeHate;
+import tomato.classifier.entity.Comment;
 import tomato.classifier.entity.Member;
 import tomato.classifier.repository.article.queryDsl.ArticleLikeHateCustomRepository;
 import tomato.classifier.repository.article.ArticleLikeHateRepository;
@@ -28,6 +29,7 @@ public class ArticleService {
     private final MemberRepository memberRepository;
     private final ArticleLikeHateRepository articleLikeHateRepository;
     private final ArticleLikeHateCustomRepository articleLikeHateCustomRepository;
+    private final CommentService commentService;
 
     public List<ArticleDto> showAll(){
 
@@ -37,7 +39,7 @@ public class ArticleService {
         for(Article article : articles){
 
             if(!article.isDeleteYn()){
-                ArticleDto articleDTO = ArticleDto.convertDto(article);
+                ArticleDto articleDTO = article.convertDto();
                 articleDtoList.add(articleDTO);
             }
         }
@@ -51,7 +53,7 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("id err"));
 
-        return ArticleDto.convertDto(article);
+        return article.convertDto();
     }
 
     public ArticleDto save(ArticleDto articleDTO){
@@ -60,49 +62,53 @@ public class ArticleService {
         articleDTO.setUpdateYn(false);
         articleDTO.setLikeNum(0);
         articleDTO.setHateNum(0);
-        Article article= Article.convertEntity(articleDTO);
+        Article article= articleDTO.convertEntity();
         articleRepository.save(article);
 
         return articleDTO;
     }
 
-    public ArticleDto update(Integer articleId, ArticleDto articleDto){
+    public ArticleDto update(ArticleDto inputArticleDto){
 
-        Article target= articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글 조회 실패"));
+        //이런 예외 처리도 뭔가 해야될 거 같은데
+        ArticleDto newArticleDto = articleRepository.findById(inputArticleDto.getArticleId())
+                .orElseThrow(() -> new IllegalArgumentException("article update - 게시글 조회 실패"))
+                .convertDto();
 
-        target.patch(articleDto);
+        //Bean Validation 방식으로 업데이트 예정
+        if(!inputArticleDto.getTitle().isEmpty() && !inputArticleDto.getContent().isEmpty()){
+            newArticleDto.setTitle(inputArticleDto.getTitle());
+            newArticleDto.setContent(inputArticleDto.getContent());
+            newArticleDto.setUpdateYn(true);
+        }
 
-        //dto - update - entity - dto
-        Article updated = articleRepository.save(target);
-
-        return ArticleDto.convertDto(updated);
+        return articleRepository.save(newArticleDto.convertEntity()).convertDto();
     }
 
-    public Article delete(Integer articleId) {
-        Article target = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("id err"));
-        target.delete();
+    public ArticleDto delete(Integer articleId) {
 
-        return articleRepository.save(target);
+        ArticleDto oldArticleDto = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("article delete - 게시글 조회 실패"))
+                .convertDto();
 
+        oldArticleDto.setDeleteYn(true);
+
+        for(Comment commentOfOldArticle : oldArticleDto.getComments()){
+            commentService.delete(commentOfOldArticle.convertDto());
+        }
+
+        return articleRepository.save(oldArticleDto.convertEntity()).convertDto();
     }
 
-        /*
-    likeHate 값
-    true - like
-    false - hate
-    null - nothing
-     */
     public ArticleLikeHateDto likeHate(ArticleLikeHateDto input){
 
         //input
         Member requestMember = memberRepository.findById(input.getMemberId());
 
         //기존 좋아요 싫어요 갯수
-        Article articleEntity = articleRepository.findById(input.getArticleId())
+        Article article = articleRepository.findById(input.getArticleId())
                 .orElseThrow(()-> new IllegalArgumentException("not Exist article"));
-        ArticleDto beforeArticleDto = ArticleDto.convertDto(articleEntity);
+        ArticleDto beforeArticleDto = article.convertDto();
         Integer oldLikeNum = beforeArticleDto.getLikeNum();
         Integer oldHateNum = beforeArticleDto.getHateNum();
 
@@ -151,7 +157,7 @@ public class ArticleService {
             input.setId(savedArticleLikeHateDto.getId());
         }
 
-        Article afterArticle = Article.convertEntity(beforeArticleDto);
+        Article afterArticle = beforeArticleDto.convertEntity();
         articleRepository.save(afterArticle);
         articleLikeHateRepository.save(ArticleLikeHate.convertEntity(input, requestMember,afterArticle));
 
@@ -182,73 +188,5 @@ public class ArticleService {
 
         return result;
     }
-
-    /*
-    이전 방식
-    public ArticleLikeHateDto checkLike(ArticleLikeHateDto articleLikeHateDto){
-
-        Member member = memberRepository.findById(articleLikeHateDto.getMemberId());
-        Integer articleId = articleLikeHateDto.getArticleId();
-
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글 조회 실패"));
-        ArticleDto articleDto = ArticleDto.convertDto(article);
-
-        int likeNum = articleDto.getLikeNum();
-        int hateNum = articleDto.getHateNum();
-
-        ArticleLikeHateDto input = articleLikeHateDto;
-        input.setDeleteYn(false);
-
-
-        ArticleLikeHate tmp = articleLikeHateCustomRepository.findLikeHate(member, articleId);
-        if(articleLikeHateDto.getLike() == null){
-            input = deleteLikeHate(articleLikeHateDto);
-        }
-        else{
-
-            if(tmp != null) {
-                ArticleLikeHateDto savedDto = ArticleLikeHateDto.convertDto(tmp);
-                input = updateLikeHate(articleLikeHateDto, savedDto, member);
-
-
-            }
-        }
-
-        ArticleLikeHate entity = ArticleLikeHate.convertEntity(input, member, input.getDeleteYn());
-        articleLikeHateRepository.save(entity);
-
-        return input;
-    }
-
-
-
-
-    public ArticleLikeHateDto updateLikeHate(ArticleLikeHateDto input, ArticleLikeHateDto saved, Member member){
-
-        boolean target = input.getLike();
-        boolean savedLike = saved.getLike();
-
-        if(saved.getDeleteYn()){
-            if(target ^ savedLike){ //둘이 다르면
-                saved.setLike(target);
-            }
-            saved.setDeleteYn(false);
-        }
-        else{
-            if(target ^ savedLike) { //둘이 다르면
-                saved.setLike(target);
-            }
-        }
-        return saved;
-    }
-
-    public ArticleLikeHateDto deleteLikeHate(ArticleLikeHateDto input){
-
-        input.setDeleteYn(true);
-
-        return input;
-    }*/
-
 }
 

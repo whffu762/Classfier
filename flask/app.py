@@ -63,8 +63,8 @@ def Select_id(TABLE, DISEASE_ID):
 
 
 
-#이미지 저장
-@app.route("/predict", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
+#이미지 분석
+@app.route("/predict-tomato-disease", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
 def predict():
     response = mainPredict()
     clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
@@ -154,8 +154,8 @@ def predict(test_loader, device, net, b_size):
 
     
     json_dict = {}
-    json_dict['name'] = max_key
-    json_dict['prob'] = max_value
+    json_dict['id'] = max_key
+    json_dict['probability'] = max_value
     json_object = json.dumps(json_dict)
 
     return json_object

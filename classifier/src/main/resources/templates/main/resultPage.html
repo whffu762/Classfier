@@ -66,14 +66,14 @@
     <div class="container text-white">
         <div class="row">
             <div class="col-md-4">
-                <img th:src="@{${result.src}}" class="rounded float-start" alt="disease"/>
+                <img th:src="@{${result.sourcePath}}" class="rounded float-start" alt="disease"/>
             </div>
             <div class="col-md-8" style="text-align: left">
                 <div>
                     <div class = "row">
-                        <p style="font-size: 2rem" th:text="${result.d_name}" class="col">질병명: 응애</p>
+                        <p style="font-size: 2rem" th:text="${result.diseaseName}" class="col">질병명: 응애</p>
                         <p class="col"></p>
-                        <p class="col" th:text="${result.prob} + '%'" style ="text-align: right; font-size: 2rem;">확률 : 90%</p>
+                        <p class="col" th:text="${result.probability} + '%'" style ="text-align: right; font-size: 2rem;">확률 : 90%</p>
                     </div>
                     <p th:text="${result.solution}" class = "content">해결책 : solution</p>
                 </div>

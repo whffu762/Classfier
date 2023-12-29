@@ -1,12 +1,13 @@
 package tomato.classifier.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import tomato.classifier.entity.Article;
 import tomato.classifier.entity.Comment;
 
 
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
@@ -25,18 +26,15 @@ public class CommentDto {
 
     private String updateTime;
 
-    public static CommentDto convertDto(Comment target){
+    public Comment convertEntity(Article article){
 
-
-        return new CommentDto(
-                target.getCommentId(),
-                target.getArticle().getArticleId(),
-                target.getCommentWriter(),
-                target.getContent(),
-                target.isDeleteYn(),
-                target.isUpdateYn(),
-                target.getUpdateTime()
-        );
-
+        return Comment.builder()
+                .commentId(this.commentId)
+                .article(article)
+                .commentWriter(this.commentWriter)
+                .content(this.content)
+                .deleteYn(this.deleteYn)
+                .updateYn(this.updateYn)
+                .build();
     }
 }

@@ -51,16 +51,10 @@
             </textarea>
         </div>
         <div style="display:inline; float: right;">
-            <button button class="btn btn-primary btn-lg" id="submitBtn"
-                    type="button" style="font-size:16px; width: 80px; height: 40px;">
-                수정
-            </button>
+            <button class="btn btn-primary btn-lg" id="submitBtn" type="button" style="font-size:16px; width: 80px; height: 40px;">수정</button>
 
-            <button class="btn btn-secondary btn-lg"
-                    th:onclick="|location.href='@{/article/detail/{articleId}(articleId=${article.articleId})}'|"
-                    type="button" style="font-size:16px; width: 80px; height: 40px;">
-                뒤로
-            </button>
+            <button class="btn btn-secondary btn-lg" type="button"
+                    onclick="getArticle()" style="font-size:16px; width: 80px; height: 40px;">뒤로</button>
         </div>
     </form>
 </div>

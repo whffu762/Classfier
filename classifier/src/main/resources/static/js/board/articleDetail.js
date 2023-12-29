@@ -1,10 +1,29 @@
 const article_Id = document.querySelector("#hiddenId").value;
-const submitBtn = document.querySelector("#commentBtn");
 const comment_writer = document.querySelector("#commentWriter").value;
 
+function deleteArticle() {
+    const url = "/article?no=" + article_Id;
+    const result = confirm("글을 삭제하겠습니까")
+    if (result) {
+        fetch(url, {
+            method: "DELETE",
+        }).then(response => {
+            const msg = (response.ok) ? "글이 삭제되었습니다" : "오류 발생"
+            alert(msg);
+            window.location.href = "/articles";
+        })
+    }
+}
+
+function getUpdateArticleForm(){
+    window.location.href = "/article/edit?no=" + article_Id;
+}
+
+
+const submitBtn = document.querySelector("#commentBtn");
 submitBtn.addEventListener("click", function () {
 
-    const url = `/article/${article_Id}/comment-add`;
+    const url = "/comment?no="+article_Id;
     if (!comment_writer) {
         fetch(url).then(response => {
             window.location.href = response.url
@@ -29,41 +48,10 @@ submitBtn.addEventListener("click", function () {
                 window.location.reload();
             })
         } else {
-            alert("글을 입력하세요")
+            alert("댓글을 입력하세요")
         }
     }
 })
-
-
-function deleteArticleFunc() {
-    const url = "/article/delete/" + article_Id
-    const result = confirm("글을 삭제하겠습니까")
-    if (result) {
-        fetch(url, {
-            method: "DELETE",
-        }).then(response => {
-            const msg = (response.ok) ? "글이 삭제되었습니다" : "오류 발생"
-            alert(msg);
-            window.location.href = "/article";
-        })
-    }
-}
-
-
-function commentDeleteFunc(comment_id) {
-    const url = "/comment-delete/" + comment_id;
-    const result = confirm("글을 삭제하겠습니까")
-    if (result) {
-        fetch(url, {
-            method: "DELETE"
-        }).then(response => {
-            const msg = (response.ok) ? "글이 삭제되었습니다" : "오류 발생"
-            alert(msg);
-
-            window.location.reload();
-        })
-    }
-}
 
 function commentSelectFunc(comment_id, writer, content) {
 
@@ -80,10 +68,10 @@ commentUpdateBtn.addEventListener("click", function () {
         commentWriter: document.querySelector("#commentUpdateWriter").value,
         content: document.querySelector("#commentUpdateContent").value
     }
-    const url = "/comment-edit/" + comment.commentId
+    const url = "/comment"
     if (comment.content.trim()) {
         fetch(url, {
-            method: "PATCH",
+            method: "PUT",
             body: JSON.stringify(comment),
             headers: {
                 "Content-Type": "application/json"
@@ -94,12 +82,34 @@ commentUpdateBtn.addEventListener("click", function () {
             window.location.reload();
         })
     } else {
-        alert("글을 입력하세요")
+        alert("댓글을 입력하세요")
     }
 })
 
+function commentDeleteFunc(comment_id) {
+    const comment = {
+        articleId : article_Id,
+        commentId : comment_id
+    }
+    const url = "/comment";
+    const result = confirm("글을 삭제하겠습니까")
+    if (result) {
+        fetch(url, {
+            method: "DELETE",
+            body: JSON.stringify(comment),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            const msg = (response.ok) ? "글이 삭제되었습니다" : "오류 발생"
+            alert(msg);
+            window.location.reload();
+        })
+    }
+}
+
 function needLoginLikeHate() {
-    const url = `/article/${article_Id}/likeOrHate`;
+    const url = "/article/like-hate?no=" + article_Id;
     fetch(url).then(response => {
         window.location.href = response.url
     })
@@ -113,7 +123,7 @@ likeBtn.addEventListener("change", function () {
     const likeLabel = document.querySelector("#likeNum");
     const hateLabel = document.querySelector("#hateNum");
 
-    let url = "/article/like";
+    let url = "/article/like-hate";
     let likeCnt = Number(likeLabel.innerText);
     let hateCnt = Number(hateLabel.innerText);
     if (hateBtn.checked) {
@@ -137,7 +147,7 @@ hateBtn.addEventListener("change", function () {
     const likeLabel = document.querySelector("#likeNum");
     const hateLabel = document.querySelector("#hateNum");
 
-    let url = "/article/like";
+    let url = "/article/like-hate";
     let hateCnt = Number(hateLabel.innerText);
     let likeCnt = Number(likeLabel.innerText);
 

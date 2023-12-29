@@ -17,18 +17,16 @@ import tomato.classifier.service.MemberService;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/article")
-@Slf4j
 public class ArticleController {
 
     private final ArticleService articleService;
     private final CommentService commentService;
     private final MemberService memberService;
 
-    //R
-    @GetMapping
+    @GetMapping("/articles")
     public String articleMain(Model model){
 
         List<ArticleDto> articleDtoList = articleService.showAll();
@@ -38,20 +36,8 @@ public class ArticleController {
         return "board/articleMain";
     }
 
-    //C
-    @GetMapping("/add")
-    public String articleAdd(Authentication authentication, Model model) {
-
-        MemberDto authenticationUser = memberService.findAuthenticatedUserInfo(authentication);
-
-        model.addAttribute("nickName", authenticationUser.getNickname());
-
-        return "board/articleAdd";
-    }
-
-    //U1
-    @GetMapping("/detail/{articleId}")
-    public String articleDetail(@PathVariable Integer articleId, Authentication authentication, Model model) {
+    @GetMapping("/article")
+    public String articleDetail(@RequestParam("no") Integer articleId, Authentication authentication, Model model) {
 
         ArticleDto articleDto = articleService.show(articleId);
         List<CommentDto> comments = commentService.comments(articleId);
@@ -62,7 +48,6 @@ public class ArticleController {
 
             ArticleLikeHateDto likeHateInfo = articleService.getArticleLikeHateInfo(authenticationUser.getLikeHatesList(), articleId);
             model.addAttribute("likeHate", likeHateInfo);
-            log.info("article authentication {} ", authentication);
         }
 
         model.addAttribute("article", articleDto);
@@ -71,9 +56,18 @@ public class ArticleController {
         return "board/articleDetail";
     }
 
-    //U2
-    @GetMapping("/edit")
-    public String articleUpdate(@RequestParam Integer articleId, Model model){
+    @GetMapping("/article/write")
+    public String articleAdd(Authentication authentication, Model model) {
+
+        MemberDto authenticationUser = memberService.findAuthenticatedUserInfo(authentication);
+
+        model.addAttribute("nickName", authenticationUser.getNickname());
+
+        return "board/articleAdd";
+    }
+
+    @GetMapping("/article/edit")
+    public String articleUpdate(@RequestParam("no") Integer articleId, Model model){
 
         ArticleDto articleDto = articleService.show(articleId);
 
@@ -81,5 +75,4 @@ public class ArticleController {
 
         return "board/articleUpdate";
     }
-
 }

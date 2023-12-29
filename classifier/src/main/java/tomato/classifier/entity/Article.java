@@ -10,10 +10,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Article extends BaseTime{
 
     @Id
@@ -30,12 +30,6 @@ public class Article extends BaseTime{
     @Column
     private String content;
 
-    @Column
-    private boolean deleteYn;
-
-    @Column
-    private boolean updateYn;
-
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
@@ -45,46 +39,34 @@ public class Article extends BaseTime{
     @Column
     private Integer hateNum;
 
-    public static Article convertEntity(ArticleDto target){
-        /*
-        if(target.getArticleId() != null){
-            throw new IllegalArgumentException("id should be null");
-        }*/
+    @Column
+    private boolean deleteYn;
 
-        return new Article().builder()
-                .articleId(target.getArticleId())
-                .title(target.getTitle())
-                .articleWriter(target.getArticleWriter())
-                .content(target.getContent())
-                .deleteYn(target.isDeleteYn())
-                .updateYn(target.isUpdateYn())
-                .comments(target.getComments())
-                .likeNum(target.getLikeNum())
-                .hateNum(target.getHateNum())
+    @Column
+    private boolean updateYn;
+
+    public ArticleDto convertDto(){
+
+        Integer count = 0;
+        for(Comment comment : this.comments){
+            if(!comment.isDeleteYn()){
+                count++;
+            }
+        }
+
+        return ArticleDto.builder()
+                .articleId(this.articleId)
+                .title(this.title)
+                .articleWriter(this.articleWriter)
+                .content(this.content)
+                .comments(this.comments)
+                .commentCount(count)
+                .likeNum(this.likeNum)
+                .hateNum(this.hateNum)
+                .deleteYn(this.deleteYn)
+                .updateYn(this.updateYn)
+                .updateTime(this.getUpdateTime())
                 .build();
-    }
-
-    public void patch(ArticleDto articleDTO){
-        if(!this.articleId.equals(articleDTO.getArticleId())){
-            throw new IllegalArgumentException("게시글 수정 실패");
-        }
-        if(!articleDTO.getTitle().equals("")){
-            this.title=articleDTO.getTitle();
-            this.updateYn = true;
-        }
-
-        if(!articleDTO.getContent().equals("")) {
-            this.content = articleDTO.getContent();
-            this.updateYn = true;
-        }
-    }
-
-    public void delete(){
-        this.deleteYn = true;
-
-        for (Comment comment : this.comments){
-            comment.delete();
-        }
     }
 }
 

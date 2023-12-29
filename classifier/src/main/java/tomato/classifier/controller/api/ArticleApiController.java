@@ -14,43 +14,40 @@ import tomato.classifier.service.ArticleService;
 
 import javax.transaction.Transactional;
 
-@RestController
-@RequestMapping("/article")
-@RequiredArgsConstructor
 @Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/article")
 public class ArticleApiController {
 
     private final ArticleService articleService;
 
-    @PostMapping("/add")
-    @Transactional
+    @PostMapping
     public ResponseEntity<ArticleDto> write(@RequestBody ArticleDto articleDTO){
 
-        ArticleDto articleDto = articleService.save(articleDTO);
+        ArticleDto article = articleService.save(articleDTO);
 
-        return new ResponseEntity<>(articleDto, HttpStatus.OK);
+        return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
 
-    @PatchMapping("/edit/{articleId}")
-    @Transactional
-    public ResponseEntity<ArticleDto> edit(@PathVariable Integer articleId , @RequestBody ArticleDto articleDTO){
+    @PutMapping
+    public ResponseEntity<ArticleDto> edit(@RequestBody ArticleDto articleDTO){
 
-        ArticleDto updateDto = articleService.update(articleId, articleDTO);
+        ArticleDto updated = articleService.update(articleDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(updateDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
-    @Transactional
-    @DeleteMapping("/delete/{articleId}")
-    public ResponseEntity<Article> delete(@PathVariable Integer articleId) {
+    @DeleteMapping
+    public ResponseEntity<ArticleDto> delete(@RequestParam("no") Integer articleId) {
 
-        Article deleted = articleService.delete(articleId);
+        ArticleDto deleted = articleService.delete(articleId);
 
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
-    @PostMapping("/like")
+    @PostMapping("/like-hate")
     public ResponseEntity<ArticleLikeHateDto> likeHate(@RequestBody ArticleLikeHateDto articleLikeHateDto, Authentication authentication){
 
         articleLikeHateDto.setMemberId(authentication.getName());

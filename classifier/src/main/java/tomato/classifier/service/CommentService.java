@@ -23,11 +23,10 @@ public class CommentService {
 
         List<CommentDto> allComments = commentRepository.findByArticleId(articleId)
                 .stream()
-                .map(comment -> CommentDto.convertDto(comment))
+                .map(Comment::convertDto)
                 .collect(Collectors.toList());
 
         List<CommentDto> comments = new ArrayList<>();
-
         for (CommentDto comment : allComments) {
             if (!comment.isDeleteYn()) {
                 comments.add(comment);
@@ -37,47 +36,44 @@ public class CommentService {
         return comments;
     }
 
-    public CommentDto save(Integer articleId, CommentDto commentDto){
+    public CommentDto save(CommentDto commentDto){
 
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글 등록할 게시글 조회 실패"));
+        Article article = articleRepository.findById(commentDto.getArticleId())
+                .orElseThrow(() -> new IllegalArgumentException("comment save - 게시글 조회 실패"));
 
         commentDto.setDeleteYn(false);
         commentDto.setUpdateYn(false);
-        Comment comment = Comment.convertEntity(commentDto, article);
-        commentRepository.save(comment);
+        return commentRepository.save(commentDto.convertEntity(article)).convertDto();
 
-        CommentDto dto = CommentDto.convertDto(comment);
-
-        return dto;
     }
 
+    public CommentDto update(CommentDto inputCommentDto){
 
-    public CommentDto update(Integer commentId, CommentDto commentDto){
-        Comment target = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글 id 오류"));
+        Article article = articleRepository.findById(inputCommentDto.getArticleId())
+                .orElseThrow(() -> new IllegalArgumentException("comment update - 게시글 조회 실패"));
 
-        target.patch(commentDto);
+        CommentDto newCommentDto = commentRepository.findById(inputCommentDto.getCommentId())
+                .orElseThrow(() -> new IllegalArgumentException("comment update - 댓글 조회 실패"))
+                .convertDto();
 
-        Comment updated = commentRepository.save(target);
+        if (!inputCommentDto.getContent().isEmpty()) {
+            newCommentDto.setContent(inputCommentDto.getContent());
+            newCommentDto.setUpdateYn(true);
+        }
 
-        CommentDto updateDto = CommentDto.convertDto(updated);
-
-        return updateDto;
+        return commentRepository.save(newCommentDto.convertEntity(article)).convertDto();
     }
 
-    public CommentDto delete(Integer commentId){
-        Comment target = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글 id 오류"));
+    public CommentDto delete(CommentDto commentDto){
+        Article article = articleRepository.findById(commentDto.getArticleId())
+                .orElseThrow(() -> new IllegalArgumentException("comment delete - 게시글 조회 실패"));
 
-        target.delete();
+        CommentDto oldCommentDto = commentRepository.findById(commentDto.getCommentId())
+                .orElseThrow(() -> new IllegalArgumentException("comment delete - 댓글 조회 실패"))
+                .convertDto();
 
-        Comment deleted = commentRepository.save(target);
+        oldCommentDto.setDeleteYn(true);
 
-        CommentDto deletedDto = CommentDto.convertDto(deleted);
-
-        return deletedDto;
+        return commentRepository.save(oldCommentDto.convertEntity(article)).convertDto();
     }
-
-
 }

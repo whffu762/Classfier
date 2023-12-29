@@ -51,7 +51,7 @@
                     <img src="/image/loading.gif" style="width:100px; height:100px;">
                 </div>
                 <div class="image-upload">
-                    <form th:method="post" th:action="@{/main/input}" id="submitForm" enctype="multipart/form-data">
+                    <form th:method="post" th:action="@{/main/upload-tomato-image}" id="submitForm" enctype="multipart/form-data">
                         <label for="files" class="form-label">Multiple files input</label>
                         <input class="form-control" type="file" id="files" name="imgFiles" accept=".jpg, .png, .jpeg" multiple>
                         <button class="btn btn-light" id="file-send-btn" type="submit">전송</button>
