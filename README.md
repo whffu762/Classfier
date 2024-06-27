@@ -17,7 +17,7 @@
 - Java 11 
 - 그 외 라이브러리
   - 파이썬 : flask/needLib.txt 참고
-  - Spring boot : build.gradle 참고
+  - Spring boot : classifier/build.gradle 참고
 
 
 
