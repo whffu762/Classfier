@@ -16,7 +16,7 @@
 - Python 3.9.11
 - Java 11 
 - 그 외 라이브러리
-  - 파이썬 : needLib.txt 참고
+  - 파이썬 : flask/needLib.txt 참고
   - Spring boot : build.gradle 참고
 
 
