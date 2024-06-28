@@ -24,11 +24,12 @@ const submitBtn = document.querySelector("#commentBtn");
 submitBtn.addEventListener("click", function () {
 
     const url = "/comment?no="+article_Id;
-    if (!comment_writer) {
-        fetch(url).then(response => {
-            window.location.href = response.url
-        })
-    } else {
+    // if (!comment_writer) {
+    //     fetch(url).then(response => {
+    //         window.location.href = response.url
+    //     })
+    // }
+    //else {
         const comment = {
             articleId: article_Id,
             commentWriter: comment_writer,
@@ -43,14 +44,21 @@ submitBtn.addEventListener("click", function () {
                     "Content-Type": "application/json"
                 }
             }).then(response => {
-                const msg = (response.ok) ? "댓글이 등록되었습니다" : "오류 발생"
-                alert(msg);
-                window.location.reload();
+                //const msg = (response.ok) ? "댓글이 등록되었습니다" : "오류 발생"
+                //alert(msg);
+                console.log(response.status)
+                console.log(response.url)
+                window.location.href = response.url;
+            }).then(response => {
+                console.log(response.status)
+                console.log(response.url)
+                window.location.href = response.url;
+
             })
         } else {
             alert("댓글을 입력하세요")
         }
-    }
+    //}
 })
 
 function commentSelectFunc(comment_id, writer, content) {

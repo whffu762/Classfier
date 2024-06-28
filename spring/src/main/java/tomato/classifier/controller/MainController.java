@@ -27,6 +27,8 @@ public class MainController {
     @PostMapping("/upload-tomato-image")
     public String inputImg(@RequestParam("imgFiles") List<MultipartFile> files, Model model) throws IOException {
 
+        //log.info("tmp");
+
         mainService.saveImg(files);
         DiseaseDto diseaseDto = mainService.predict();
         model.addAttribute("result", diseaseDto);
