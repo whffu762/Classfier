@@ -29,11 +29,11 @@
 
             <div class="d-flex" style="margin-right: 5rem">
                 <div sec:authorize="isAnonymous()">
-                    <button type="button" class="btn btn-success" th:onclick="|location.href='@{/auth/login}'|">Login</button>
+                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/auth/login}'|">Login</button>
                 </div>
                 <div sec:authorize="isAuthenticated()">
-                    <button type="button" class="btn btn-warning" th:onclick="|location.href='@{/auth/edit/mypage}'|">MyPage</button>
-                    <button type="button" style="margin-left: 2rem" class="btn btn-danger" th:onclick="|location.href='@{/auth/logout}'|">Logout</button>
+                    <button type="button" class="btn btn-outline-success" th:onclick="|location.href='@{/auth/edit/mypage}'|">MyPage</button>
+                    <button type="button" style="margin-left: 2rem" class="btn btn-outline-secondary" th:onclick="|location.href='@{/auth/logout}'|">Logout</button>
                 </div>
             </div>
         </div>

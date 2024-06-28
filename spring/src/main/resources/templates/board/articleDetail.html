@@ -64,33 +64,31 @@
 
     <div class="container" style="width: 60%; margin-top: 1rem">
         <!-- 게시글 -->
-        <table class="table mb-1">
-            <thead>
-            <tr>
-                <th scope="col"><h1 th:text="${article.title}">title</h1></th>
-                <td>
-                    <div th:if="${article.articleWriter} == ${nickName}">
-                        <button style="display: inline-block; float: right; margin-right: 0.5rem" type="button" class="btn btn-danger" id="deleteBtn" onclick="deleteArticle()">삭제</button>
-                        <button style="display: inline-block; float: right;margin-right: 0.2rem" type="button" class="btn btn-primary" onclick="getUpdateArticleForm()">수정</button>
-                    </div>
-                </td>
-            </tr>
-            </thead>
+        <div class="article_title">
+            <h2 th:text="${article.title}">title</h2>
 
-            <tbody>
-            <tr>
-                <th scope="row" th:text="${article.articleWriter} +  '&emsp; | &emsp;'  + ${article.updateTime}">
-                    작성자|작성시간
-                </th>
-                <td><p th:text="'댓글 수 : ' + ${comments.size()}"></p></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="height:10rem; font-size: 24px">
-                    <pre th:text="${article.content}">내용</pre>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <div th:if="${article.articleWriter} == ${nickName}" style="text-align:right;">
+                <button style="display: inline-block; float: right; margin-right: 0.5rem" type="button" class="btn btn-danger" id="deleteBtn" onclick="deleteArticle()">삭제</button>
+                <button style="display: inline-block; float: right;margin-right: 0.2rem" type="button" class="btn btn-primary" onclick="getUpdateArticleForm()">수정</button>
+            </div>
+        </div>
+
+        <div class="article_info">
+            <div th:text="'작성자 : '+${article.articleWriter}" style="font-size:15px;">작성자</div>
+            <div style="font-size:13px; color:#949494">
+                <span th:text="${article.updateTime}">작성시간</span>
+                <span th:text="'댓글 수 : ' + ${comments.size()}"></span>
+            </div>
+        </div>
+
+        <div class="article_content">
+            <hr>
+            <div style="font-size: 15px; height:10rem;">
+                <pre th:text="${article.content}"
+                     style="white-space:pre-wrap; word-wrap:break-word; font-family: 'Segoe UI';">내용</pre>
+            </div>
+            <hr>
+        </div>
         <!-- 게시글 -->
 
         <!-- 추천 비추천 -->
@@ -148,8 +146,9 @@
                        type="text" th:value="${nickName}" id="commentWriter" disabled>
                 <textarea class="form-control form-control-sm" id="commentContent" rows="3" placeholder="댓글 입력"></textarea>
             </div>
-            <p>
-                <button class="btn btn-primary btn-lg" type="button" id="commentBtn" style="font-size:16px; width: 80px; height: 40px; margin-right:1rem">작성</button>
+            <p style="text-align :right;">
+                <button class="btn btn-outline-secondary" type="button" id="commentBtn"
+                        style="font-size:16px; width: 80px; height: 40px; margin-right:1rem;">작성</button>
             </p>
         </form>
         <!-- 댓글 입력-->

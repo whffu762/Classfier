@@ -13,10 +13,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
     <style>
-        #file-send {
-            margin-top: 2rem;
-            margin-left:28rem;
-        }
         .container {
             max-width: 560px;
         }
@@ -44,17 +40,23 @@
      style="flex: 1;background-image: url('/image/tomato.jpg'); height:100vh; background-repeat:no-repeat; background-size:cover;">
     <div class="container">
         <div class="py-5 text-center">
-            <h1>Tomato Leaf Classification</h1>
-            <h3>다양한 각도로 한 잎을 찍어주세요</h3></div>
+            <h1>Tomato Leaf Disease Care</h1>
+        </div>
             <div class="container">
                 <div id="div_load_image" style="position:absolute; top:50%; left:50%;width:0px;height:0px; z-index:9999; background:#f0f0f0; filter:alpha(opacity=50); opacity:alpha * 0.5; margin:auto; padding:0; text-align:center">
                     <img src="/image/loading.gif" style="width:100px; height:100px;">
                 </div>
                 <div class="image-upload">
                     <form th:method="post" th:action="@{/main/upload-tomato-image}" id="submitForm" enctype="multipart/form-data">
-                        <label for="files" class="form-label">Multiple files input</label>
-                        <input class="form-control" type="file" id="files" name="imgFiles" accept=".jpg, .png, .jpeg" multiple>
-                        <button class="btn btn-light" id="file-send-btn" type="submit">전송</button>
+                        <label for="files" class="form-label">서로 다른 잎을 입력해야 정확한 진단이 가능합니다</label>
+                        <div class="row">
+                            <div class="col-9">
+                                <input class="form-control" id="files" type="file" name="imgFiles" accept=".jpg, .png, .jpeg" multiple>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-secondary" id="file-send-btn" type="submit">사진 입력</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             <div class="image-show" id="image-show"></div>
