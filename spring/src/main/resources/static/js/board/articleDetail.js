@@ -24,12 +24,13 @@ const submitBtn = document.querySelector("#commentBtn");
 submitBtn.addEventListener("click", function () {
 
     const url = "/comment?no="+article_Id;
-    // if (!comment_writer) {
-    //     fetch(url).then(response => {
-    //         window.location.href = response.url
-    //     })
-    // }
-    //else {
+    if (!comment_writer) {
+        alert("로그인이 필요합니다")
+        fetch(url).then(response => {
+            window.location.href = response.url
+        })
+    }
+    else {
         const comment = {
             articleId: article_Id,
             commentWriter: comment_writer,
@@ -58,7 +59,7 @@ submitBtn.addEventListener("click", function () {
         } else {
             alert("댓글을 입력하세요")
         }
-    //}
+    }
 })
 
 function commentSelectFunc(comment_id, writer, content) {

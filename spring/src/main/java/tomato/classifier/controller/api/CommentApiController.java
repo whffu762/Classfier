@@ -18,22 +18,6 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    @GetMapping("/comment")
-    public String afterLogin(@RequestParam("no") Integer articleId){
-
-        log.info("GET 호출됨");
-
-        return "redirect:/article?no=" + articleId;
-    }
-
-//    @PostMapping("/comment")
-//    public String write(@RequestParam("no") Integer id) throws InterruptedException{
-//
-//        log.info("POST 호출됨");
-//
-//        return "redirect:/article?no=" + id;
-//    }
-
     @PostMapping("/comment")
     public ResponseEntity<CommentDto> write(@RequestBody CommentDto commentDTO){
 
