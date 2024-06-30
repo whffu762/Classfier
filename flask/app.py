@@ -7,10 +7,10 @@ import os
 forAiPath = os.path.join("D:", os.sep, "vscode", "forTest")
 
 #AI가 접근할 저장된 이미지의 경로
-inputImgDir = os.path.join(forAiPath, "inputImg")
+inputImgDir = os.path.join(forAiPath, "5_dest")
 
 #이미지가 저장될 경로
-targetPath = os.path.join(inputImgDir, "target")
+targetPath = os.path.join(inputImgDir, "Target")
 
 #이미지 저장될 개수
 input_num = 5
