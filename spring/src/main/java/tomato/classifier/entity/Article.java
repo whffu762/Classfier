@@ -27,7 +27,7 @@ public class Article extends BaseTime{
     @Column
     private String articleWriter;
 
-    @Column(length = 1000)
+    @Column(length = 1000000)
     private String content;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)

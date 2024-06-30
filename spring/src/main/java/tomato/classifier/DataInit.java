@@ -19,67 +19,20 @@ public class DataInit {
     @PostConstruct
     @Builder
     public void init(){
-        articleRepository.save(Article.builder()
-                .articleId(null)
-                .title("titleA")
-                .articleWriter("writerA")
-                .content("contentA")
-                .comments(null)
-                .likeNum(0)
-                .hateNum(0)
-                .deleteYn(false)
-                .updateYn(false)
-                .build());
 
-        articleRepository.save(Article.builder()
-                .articleId(null)
-                .title("titleB")
-                .articleWriter("writerB")
-                .content("contentB")
-                .comments(null)
-                .likeNum(0)
-                .hateNum(0)
-                .deleteYn(false)
-                .updateYn(false)
-                .build()
-        );
-
-        articleRepository.save(Article.builder()
-                .articleId(null)
-                .title("titleC")
-                .articleWriter("writerC")
-                .content("contentC")
-                .comments(null)
-                .likeNum(0)
-                .hateNum(0)
-                .deleteYn(false)
-                .updateYn(false)
-                .build()
-        );
-        articleRepository.save(Article.builder()
-                .articleId(null)
-                .title("titleD")
-                .articleWriter("writerD")
-                .content("contentD")
-                .comments(null)
-                .likeNum(0)
-                .hateNum(0)
-                .deleteYn(false)
-                .updateYn(false)
-                .build()
-        );
-        articleRepository.save(Article.builder()
-                .articleId(null)
-                .title("titleE")
-                .articleWriter("writerE")
-                .content("contentE")
-                .comments(null)
-                .likeNum(0)
-                .hateNum(0)
-                .deleteYn(false)
-                .updateYn(false)
-                .build()
-        );
+        for(int i=0;i<20;i++){
+            articleRepository.save(Article.builder()
+                    .articleId(null)
+                    .title("title" + i)
+                    .articleWriter("writer" + i)
+                    .content("content" + i)
+                    .comments(null)
+                    .likeNum(0)
+                    .hateNum(0)
+                    .deleteYn(false)
+                    .updateYn(false)
+                    .build());
+        }
     }
 
     private final MemberRepository memberRepository;
