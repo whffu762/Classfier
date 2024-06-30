@@ -9,22 +9,14 @@
           crossorigin="anonymous">
 
     <style>
-        .container {
-            max-width: 560px;
-        }
         .field-error {
             border-color: #dc3545;
             color: #dc3545;
         }
         #wrapper{
             height: auto;
-            padding-bottom: 500px;
             min-height: 100%;
-        }
-        footer{
-            height: 500px;
-            position : relative;
-            transform : translateY(-100%);
+            max-width: 560px;
         }
     </style>
 </head>
@@ -32,7 +24,7 @@
 
 <div th:replace="/fragments/nav.html :: nav"></div>
 
-<div class="container" style="width: 70%; margin-bottom: 10px" id="wrapper">
+<div id="wrapper" class="container" style="margin-bottom: 10px">
     <div class="py-5 text-center">
         <h2>회원가입</h2>
     </div>
@@ -70,7 +62,7 @@
         </ul>
     </span>
 
-    <div style="display:inline; float: right;">
+    <div>
         <div class="row">
             <div class="col-sm-9">
         <button class="btn btn-primary btn-lg"

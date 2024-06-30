@@ -11,13 +11,14 @@
     <style>
         #wrapper{
             height: auto;
-            padding-bottom: 500px;
             min-height: 100%;
+            width: 70%;
         }
-        footer{
-            height: 500px;
-            position : relative;
-            transform : translateY(-100%);
+
+        .btn{
+            font-size:16px;
+            width: 80px;
+            height: 40px;
         }
     </style>
 </head>
@@ -25,7 +26,7 @@
 
 <div th:replace="/fragments/nav.html :: nav"></div>
 
-<div class="container" style="width: 70%" id="wrapper">
+<div id="wrapper" class="container">
     <div class="py-5 text-center">
         <h2>게시글 수정</h2>
     </div>
@@ -45,16 +46,13 @@
         </div>
         <div class="mb-3">
             <label for="content">내용</label>
-            <textarea class="form-control" rows="5"
-                      id="content" name="content"
+            <textarea id="content" class="form-control" name="content" rows="5"
                       th:text="${article.content}">
             </textarea>
         </div>
         <div style="display:inline; float: right;">
-            <button class="btn btn-primary btn-lg" id="submitBtn" type="button" style="font-size:16px; width: 80px; height: 40px;">수정</button>
-
-            <button class="btn btn-secondary btn-lg" type="button"
-                    onclick="getArticle()" style="font-size:16px; width: 80px; height: 40px;">뒤로</button>
+            <button class="btn btn-primary btn-lg" id="submitBtn" type="button">수정</button>
+            <button class="btn btn-secondary btn-lg" type="button" onclick="getArticle()">뒤로</button>
         </div>
     </form>
 </div>
