@@ -30,13 +30,17 @@
             transform: translateY(-100%);
         }
 
-        .likeHateBtn {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
+        #article_content {
+            min-height: 10rem;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
 
-
+        #article_content pre{
+            white-space:pre-wrap;
+            word-wrap:break-word;
+            font-family: Segoe UI;
+            min-height: 10rem;
         }
 
         #likeHateContainer {
@@ -45,8 +49,15 @@
             align-items: center;
             justify-content: center;
         }
-    </style>
 
+        .likeHateBtn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -64,16 +75,16 @@
 
     <div class="container" style="width: 60%; margin-top: 1rem">
         <!-- 게시글 -->
-        <div class="article_title">
+        <div id="article_title">
             <h2 th:text="${article.title}">title</h2>
 
             <div th:if="${article.articleWriter} == ${nickName}" style="text-align:right;">
-                <button style="display: inline-block; float: right; margin-right: 0.5rem" type="button" class="btn btn-danger" id="deleteBtn" onclick="deleteArticle()">삭제</button>
-                <button style="display: inline-block; float: right;margin-right: 0.2rem" type="button" class="btn btn-primary" onclick="getUpdateArticleForm()">수정</button>
+                <button id="deleteBtn" class="btn btn-outline-danger" style="display: inline-block; float: right; margin-right: 0.5rem" type="button" onclick="deleteArticle()">삭제</button>
+                <button class="btn btn-outline-primary" style="display: inline-block; float: right; margin-right: 0.2rem" type="button" onclick="getUpdateArticleForm()">수정</button>
             </div>
         </div>
 
-        <div class="article_info">
+        <div id="article_info">
             <div th:text="'작성자 : '+${article.articleWriter}" style="font-size:15px;">작성자</div>
             <div style="font-size:13px; color:#949494">
                 <span th:text="${article.updateTime}">작성시간</span>
@@ -81,14 +92,11 @@
             </div>
         </div>
 
-        <div class="article_content">
-            <hr>
-            <div style="font-size: 15px; height:10rem;">
-                <pre th:text="${article.content}"
-                     style="white-space:pre-wrap; word-wrap:break-word; font-family: 'Segoe UI';">내용</pre>
-            </div>
-            <hr>
+        <hr>
+        <div id="article_content">
+            <pre th:text="${article.content}">내용</pre>
         </div>
+        <hr>
         <!-- 게시글 -->
 
         <!-- 추천 비추천 -->
