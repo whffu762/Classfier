@@ -23,14 +23,14 @@ public class MainService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    @Value("D:/vscode/forTest/inputImg/target/")
+    @Value("C:/Users/whffu/VScode/forTest/5_dest/Target/")
     //@Value("/home/ubuntu/ai/inputImg/target/")
     private String fileDir; //입력된 이미지가 저장될 경로
 
     @Value("http://127.0.0.1:5000/predict-tomato-disease")
     private String url; //Flask 서버의 URL
 
-    public void saveImg(List<MultipartFile> files) throws IOException {
+    public void saveImg(List<MultipartFile> files) {
         //stream 으로 다 바꾸기
 
         files.stream()
