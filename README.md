@@ -12,7 +12,7 @@
 ### 구성
 ---
 #### Web Server
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/53a4b5d5-787e-4d74-bae1-61ab634741c4">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/9a533895-c682-491c-867a-c90a0ae6159e">
 
 #### AI Server
 <img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/ae8a8e5a-e9fa-4bc1-9a81-0f04c5a18b93">
@@ -32,7 +32,7 @@
 ### UI
 ---
 ### 토마토 질병 탐색
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d5cef66-d034-40e1-a2b8-6d02e2fd1af8" width="750" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8f35e71c-1c9f-4365-8af2-8ec3919ba013">
 
 
 ### 게시판 기능
