@@ -1,19 +1,20 @@
 from flask import Flask
 app = Flask(__name__)
 
-import os
-#이미지와 AI 모델이 저장된 경로
-# forAiPath = os.path.join("/home", "ubuntu", "ai")
-forAiPath = os.path.join("D:", os.sep, "vscode", "forTest")
-
-#AI가 접근할 저장된 이미지의 경로
-inputImgDir = os.path.join(forAiPath, "5_dest")
-
-#이미지가 저장될 경로
-targetPath = os.path.join(inputImgDir, "Target")
 
 #이미지 저장될 개수
 input_num = 5
+
+import os;
+
+#AI가 접근할 저장된 이미지의 경로
+from setting import for_ai_path;
+
+#이미지가 저장될 경로
+from setting import image_path;
+
+#모델이 저장된 경로
+from setting import model_path;
 
 
 import pymysql
@@ -67,7 +68,7 @@ def Select_id(TABLE, DISEASE_ID):
 @app.route("/predict-tomato-disease", methods=['GET'])   #왜 get으로도 받는지는 기능 다 완성되면 실험
 def predict():
     response = mainPredict()
-    clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
+    clearFolder(image_path) #요청 처리가 끝나면 폴더 내 이미지 제거
     
     return  response
 
@@ -91,8 +92,7 @@ from PIL import Image
 #데이터 전처리
 #@app.route("/predict", methods=['POST'])  
 def mainPredict():
-    #입력 데이터가 저장될 경로
-    data_path = inputImgDir
+    
     #batch_size 
     b_size = 1
 
@@ -100,13 +100,13 @@ def mainPredict():
                                            transforms.ToTensor(),
                                            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    test_dataset = CustomImageDataset(data_set_path=data_path, transforms=trans_test)
+    test_dataset = CustomImageDataset(data_set_path=for_ai_path, transforms=trans_test)
 
     test_loader = DataLoader(test_dataset, num_workers=2, batch_size=b_size, shuffle=True)
 
     json_object = predictDensenet(test_loader, b_size)
     
-    clearFolder(targetPath) #요청 처리가 끝나면 폴더 내 이미지 제거
+    clearFolder(image_path) #요청 처리가 끝나면 폴더 내 이미지 제거
     
     return json_object 
 
@@ -119,9 +119,6 @@ def predictDensenet(test_loader, b_size):
     num_classes = 9
     num_ftrs = model.classifier.in_features
     model.classifier = nn.Linear(num_ftrs, num_classes)
-
-    #모델이 저장된 경로
-    model_path = os.path.join(forAiPath, "best_densenet-30.pth")
 
     #사용할 장치(GPU or CPU)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -187,8 +184,8 @@ def doPredict(val_loader, device, net, b_size, result):
         result = Counter(result)
 
     return result
-            
-    
+
+
 class CustomImageDataset(Dataset):
 
     def get_class_names(self):
@@ -202,7 +199,6 @@ class CustomImageDataset(Dataset):
         class_names = os.walk(self.data_set_path).__next__()[1]
 
         temp_class_name = class_names.copy()
-
 
         for index, class_name in enumerate(temp_class_name):
             label = index
