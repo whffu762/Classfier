@@ -11,10 +11,14 @@
 
 ### 구성
 ---
-- 웹 서버 : Spring Boot, Mysql
-- AI 서버 : Flask
-- AI : DenseNet161, pytorch
-- 프론트 : HTML, JS, Thymeleaf
+#### Web Server
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/53a4b5d5-787e-4d74-bae1-61ab634741c4">
+
+#### AI Server
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/ae8a8e5a-e9fa-4bc1-9a81-0f04c5a18b93">
+
+#### Frontend
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/b18d8e40-6276-4eee-9781-2e6ca161e689">
 
 
 ### 요구 사항
@@ -23,49 +27,49 @@
 - Java 11 
 - 라이브러리
   - 파이썬 : flask/needLib.txt 참고
-  - Spring boot : classifier/build.gradle 참고
+  - Spring boot : spring/build.gradle 참고
 
 ### UI
 ---
 ### 토마토 질병 탐색
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d5cef66-d034-40e1-a2b8-6d02e2fd1af8" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d5cef66-d034-40e1-a2b8-6d02e2fd1af8" width="750" height="450">
 
 
 ### 게시판 기능
 #### 로그인 
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/2da94ae1-7b6f-4140-9d6d-bf4f859fe65e" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/2da94ae1-7b6f-4140-9d6d-bf4f859fe65e">
 
 #### 회원 정보 조회 및 수정
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/3e47ab13-c4dd-4b85-b056-76c68965646d" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/3e47ab13-c4dd-4b85-b056-76c68965646d">
 
 #### 게시글 메인
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d7010ba-5447-42be-a69f-8f0116e76d57" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d7010ba-5447-42be-a69f-8f0116e76d57">
 
 
 #### 게시글 작성
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/3b21996e-0232-4814-98ea-99b01a20c20f" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/3b21996e-0232-4814-98ea-99b01a20c20f">
 
 
 #### 게시글 조회
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/e4636dbb-98ab-47ee-8d95-a16030cba336" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/e4636dbb-98ab-47ee-8d95-a16030cba336">
 
 #### 게시글 수정
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/26759065-2124-4802-b2ed-6ad1e9cb34c2" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/26759065-2124-4802-b2ed-6ad1e9cb34c2">
 
 
 
 ### UML
 ---
 #### 질병 탐색 절차
-<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/5c3c0b8a-5cdf-4d2a-80a8-2bc82d87443e" width="600" height="450">
+<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/5c3c0b8a-5cdf-4d2a-80a8-2bc82d87443e">
 
 #### ERD
-<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/ea33265d-3d34-42fd-afad-57b47ee3ae1a" width="600">
+<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/ea33265d-3d34-42fd-afad-57b47ee3ae1a">
 
 #### API 명세
-<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/92cbfff5-83f3-4201-8a9a-4c248e91fae8" width="600">
+<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/92cbfff5-83f3-4201-8a9a-4c248e91fae8">
 <br>
-<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/afad7481-d817-445d-94f1-b446c41d6bf6" width="600">
+<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/afad7481-d817-445d-94f1-b446c41d6bf6">
 <br>
-<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/d67f5137-119a-4138-8e96-cf8882b5c5cc" width="600">
+<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/d67f5137-119a-4138-8e96-cf8882b5c5cc">
 "
