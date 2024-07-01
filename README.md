@@ -61,7 +61,7 @@
 ### UML
 ---
 #### 질병 탐색 절차
-<img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/5c3c0b8a-5cdf-4d2a-80a8-2bc82d87443e">
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/11de2796-7a61-412c-aa84-641a95b9f30a">
 
 #### ERD
 <img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/ea33265d-3d34-42fd-afad-57b47ee3ae1a">
@@ -72,4 +72,3 @@
 <img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/afad7481-d817-445d-94f1-b446c41d6bf6">
 <br>
 <img src="https://github.com/whffu762/Tomato-disease-classifier/assets/117614180/d67f5137-119a-4138-8e96-cf8882b5c5cc">
-"
