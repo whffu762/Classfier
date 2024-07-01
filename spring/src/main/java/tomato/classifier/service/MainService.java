@@ -23,7 +23,8 @@ public class MainService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
-    @Value("C:/Users/whffu/VScode/forTest/5_dest/Target/")
+    //@Value("C:/Users/whffu/VScode/forTest/5_dest/Target/")
+    @Value("D:/vscode/forTest/inputImg/target/")
     //@Value("/home/ubuntu/ai/inputImg/target/")
     private String fileDir; //입력된 이미지가 저장될 경로
 

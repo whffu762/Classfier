@@ -28,10 +28,16 @@
 ### UI
 ---
 ### 토마토 질병 탐색
-gif
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d5cef66-d034-40e1-a2b8-6d02e2fd1af8" width="600" height="450">
 
 
 ### 게시판 기능
+#### 로그인 
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/2da94ae1-7b6f-4140-9d6d-bf4f859fe65e" width="600" height="450">
+
+#### 회원 정보 조회 및 수정
+<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/3e47ab13-c4dd-4b85-b056-76c68965646d" width="600" height="450">
+
 #### 게시글 메인
 <img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/8d7010ba-5447-42be-a69f-8f0116e76d57" width="600" height="450">
 
@@ -46,8 +52,6 @@ gif
 #### 게시글 수정
 <img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/26759065-2124-4802-b2ed-6ad1e9cb34c2" width="600" height="450">
 
-#### 회원 정보 조회 및 수정
-<img src="https://github.com/whffu762/Tomato_Disease_Care/assets/117614180/3e47ab13-c4dd-4b85-b056-76c68965646d" width="600" height="450">
 
 
 ### UML
