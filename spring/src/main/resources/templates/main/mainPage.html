@@ -34,6 +34,11 @@
             margin-top: 2rem;
         }
 
+        #input_image_wrapper{
+            display: flex;
+            justify-content: center;
+        }
+
         #div_load_image{
             position:absolute;
             top:50%;
@@ -47,6 +52,7 @@
             margin:auto; padding:0;
             text-align:center
         }
+
         #div_load_image img{
             width:100px;
             height:100px;
@@ -71,11 +77,11 @@
                     <form th:method="post" th:action="@{/main/upload-tomato-image}" id="submitForm"
                           enctype="multipart/form-data">
                         <label for="files" class="form-label">서로 다른 잎을 입력해야 정확한 진단이 가능합니다</label>
-                        <div class="row">
-                            <div class="col-9">
+                        <div id="input_image_wrapper">
+                            <div class="input_image" style="margin-right: 1rem">
                                 <input class="form-control" id="files" type="file" name="imgFiles" accept=".jpg, .png, .jpeg" multiple>
                             </div>
-                            <div class="col-3">
+                            <div class="input_image" style="margin-left: 1rem">
                                 <button class="btn btn-secondary" id="file-send-btn" type="submit">사진 입력</button>
                             </div>
                         </div>
